@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<!DOCTYPE definition PUBLIC "-//objectweb.org//DTD Fractal ADL 2.0//EN" "classpath://org/objectweb/fractal/cecilia/adl/parser/xml/cecilia.dtd">
+<definition name="Blur.Worker">
+
+  <interface name="work" role="server" signature="Blur.Work" />
+  <interface name="signal" role="client" signature="Blur.Collect" />
+
+  <content class="Blur.worker" language="thinkMC" />
+
+</definition>
