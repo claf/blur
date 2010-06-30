@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<!DOCTYPE definition PUBLIC "-//objectweb.org//DTD Fractal ADL 2.0//EN" "classpath://org/objectweb/fractal/cecilia/adl/parser/xml/cecilia.dtd">
+<definition name="Blur.Blur">
+  
+  <interface name="main" role="server" signature="boot.api.Main" />
+  
+  <component name="Dispatcher" definition="Blur.Dispatcher" />
+  <component name="Worker" definition="Blur.Worker" />
+  <component name="Finalizer" definition="Blur.Finalizer" />
+
+  <binding client="this.main" server="Dispatcher.entry" />
+  <binding client="Dispatcher.work" server="Worker.work" />
+  <binding client="Worker.signal" server="Finalizer.collect" />
+  <binding client="Dispatcher.infos" server="Finalizer.collect" />
+
+</definition>

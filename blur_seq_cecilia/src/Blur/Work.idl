@@ -1,0 +1,5 @@
+package Blur;
+
+public interface Work {
+  void blur (any array, int ysize, int xstart, int ystart, int xblock_size, int yblock_size);
+}

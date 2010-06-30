@@ -1,0 +1,6 @@
+package Blur;
+
+public interface Collect {
+  void signal ();
+  void set_info (string fileout_name, int xsize, int ysize, int maxrgb, any array);
+}
