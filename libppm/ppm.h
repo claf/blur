@@ -3,7 +3,7 @@
 #include <ctype.h>
 #include <string.h>
 
-//#define BLUR_DEBUG
+//#define PPM_DEBUG
 
 #define min(a,b) (a < b ? a : b)
 

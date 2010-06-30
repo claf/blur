@@ -303,7 +303,7 @@ int ppmb_blur (int *array, int ysize, int xstart, int ystart, int xblock_size, i
   int k;
   int *index;
 
-#ifdef BLUR_DEBUG  
+#ifdef PPM_DEBUG  
   printf ("Je traite de (%d,%d) à (%d,%d)\n", xstart, ystart,
 	  xstart + xblock_size, ystart + yblock_size);
 #endif
