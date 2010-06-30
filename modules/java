@@ -1,0 +1,17 @@
+#%Module1.0#####################################################################
+##
+## intel compiler modulefile
+##
+proc ModulesHelp { } {
+        global version modroot
+
+        puts stderr "\tJava - loads Java environment variables"
+}
+
+module-whatis	"loads the Java environment variables"
+
+# for Tcl script use only
+set javahome /usr/lib/jvm/java-6-sun/jre/
+
+#prepend-path    PATH   		            $mavenroot/bin/
+prepend-path    JAVA_HOME                     $javahome

@@ -1,0 +1,22 @@
+#%Module1.0#####################################################################
+##
+## intel compiler modulefile
+##
+proc ModulesHelp { } {
+        global version modroot
+
+        puts stderr "\tCecilia - loads Cecilia environment variables"
+}
+
+module-whatis	"loads the Cecilia environment variables"
+
+# for Tcl script use only
+set	ceciliaroot /home/claferri/Work/cecilia_workaround/cecilia-2.1.0/
+set ceciliabin $ceciliaroot/bin
+
+#prepend-path    PATH   		            $mavenroot/bin/
+prepend-path    CECILIA_ROOT                $ceciliaroot
+prepend-path    CECILIA_BIN                 $ceciliabin
+prepend-path    PATH                        $ceciliabin
+
+module load java

@@ -1,0 +1,19 @@
+Requirement :
+  * modules (C version) : http://modules.sourceforge.net/
+
+Install :
+  * install module from source and add this line to bashrc :
+    . /usr/local/Modules/3.2.7/init/bash
+
+Configuration :
+  * copy / create modulefiles into default search path (/usr/local/Modules/3.2.7/modulefiles/)
+  OR
+  * define a new search path (add this in bashrc) :
+    module use ~/.modules
+
+Usage :
+(see http://modules.sourceforge.net/man/module.html)
+  * module load java
+  * module list
+  * module avail
+  * module unload java
