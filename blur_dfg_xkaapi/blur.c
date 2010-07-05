@@ -70,9 +70,9 @@ KAAPI_REGISTER_TASKFORMAT ( app_main_format,
 			    app_main_body,
 			    sizeof (app_main_arg_t),
 			    3,
-			    (kaapi_access_mode_t[]) {},
-			    (kaapi_offset_t[]) {},
-			    (const struct kaapi_format_t*[]) {})
+			    (kaapi_access_mode_t[]) {KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V},
+			    (kaapi_offset_t[]) {offsetof(app_main_arg_t, _this), offsetof(app_main_arg_t, argc), offsetof(app_main_arg_t, argv)},
+			    (const struct kaapi_format_t*[]) {void*, kaapi_int_format, char**})
 
 /* blur task decl. : */
 
@@ -81,9 +81,9 @@ KAAPI_REGISTER_TASKFORMAT ( blur_format,
 			    blur_body,
 			    sizeof (blur_arg_t),
 			    7,
-			    (kaapi_access_mode_t[]) {},
-			    (kaapi_offset_t[]) {},
-			    (const struct kaapi_format_t*[]) {})
+			    (kaapi_access_mode_t[]) {KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V},
+			    (kaapi_offset_t[]) {offsetof(blur_arg_t, _this), offsetof(blur_arg_t, array), offsetof(blur_arg_t, ysize), offsetof(blur_arg_t, xstart), offsetof(blur_arg_t, ystart), offsetof(blur_arg_t, xblock_size), offsetof(blur_arg_t,yblock_size)},
+			    (const struct kaapi_format_t*[]) {void*, void*, kaapi_int_format, kaapi_int_format, kaapi_int_format, kaapi_int_format, kaapi_int_format})
 
 /* signal task decl. : */
 
@@ -92,9 +92,9 @@ KAAPI_REGISTER_TASKFORMAT ( signal_format,
 			    signal_body,
 			    sizeof (signal_arg_t),
 			    1,
-			    (kaapi_access_mode_t[]) {},
-			    (kaapi_offset_t[]) {},
-			    (const struct kaapi_format_t*[]) {})
+			    (kaapi_access_mode_t[]) {KAAPI_ACCESS_MODE_V},
+			    (kaapi_offset_t[]) {offsetof(signal_arg_t, _this)},
+			    (const struct kaapi_format_t*[]) {void*})
 
 /* set_info task decl. : */
 
@@ -103,6 +103,15 @@ KAAPI_REGISTER_TASKFORMAT ( set_info_format,
 			    set_info_body,
 			    sizeof (set_info_arg_t),
 			    6,
-			    (kaapi_access_mode_t[]) {},
-			    (kaapi_offset_t[]) {},
-			    (const struct kaapi_format_t*[]) {})
+			    (kaapi_access_mode_t[]) {KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V},
+			    (kaapi_offset_t[]) {offsetof(set_info_arg_t, _this), offsetof(set_info_arg_t, fileout_name), offsetof(set_info_arg_t, xsize), offsetof(set_info_arg_t, ysize), offsetof(set_info_arg_t, maxrgb), offsetof(set_info_arg_t, array)},
+			    (const struct kaapi_format_t*[]) {void*, char*, kaapi_int_format, kaapi_int_format, kaapi_int_format, void*})
+
+/********************
+ * MAIN DECLARATION *
+ ********************/
+ 
+ int main (int argc, char** argv)
+{
+  
+}
