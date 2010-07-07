@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "ppm.h"
+#include <ppm.h>
 
 DECLARE_DATA {
   

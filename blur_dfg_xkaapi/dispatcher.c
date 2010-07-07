@@ -8,7 +8,7 @@
  */
 
 #include "blur.h"
-#include "ppm.h"
+#include <ppm.h>
 
 int  *array;
 int xsize, ysize;

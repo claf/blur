@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "blur.h"
-#include "ppm.h"
+#include <ppm.h>
 
 void blur (void *array, int ysize, int xstart, int ystart, int xblock_size, int yblock_size)
 {

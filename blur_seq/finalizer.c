@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "blur.h"
-#include "ppm.h"
+#include <ppm.h>
 
 char *_fileout_name;
 int _xsize;

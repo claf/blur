@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "ppm.h"
+#include <ppm.h>
 #include "blur.h"
 
 int  *array;
