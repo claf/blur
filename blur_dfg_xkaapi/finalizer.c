@@ -8,7 +8,7 @@ int _maxrgb;
 int *_array;
 int _nb_block;
 
-void signal_body   (void* taskarg, kaapi_thread_t* thread)
+void signal_body (void* taskarg, kaapi_thread_t* thread)
 {
 #ifdef BLUR_DEBUG
   printf ("DEBUG : signal method from component Finalizer\n");
@@ -19,8 +19,8 @@ void signal_body   (void* taskarg, kaapi_thread_t* thread)
   count = count + 1;
 
   if (count == _nb_block) {
-#ifdef BLUR_DEBUG    
-    printf ("DEBUG : Writing data to file outa.ppm\n");
+#ifdef BLUR_DEBUG
+    printf ("DEBUG : Writing data to file %s\n", _fileout_name);
 #endif
     ppmb_write (_fileout_name, _xsize, _ysize, _maxrgb, _array);
   }
