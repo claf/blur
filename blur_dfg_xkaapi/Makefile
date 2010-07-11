@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-std=c99 -Wall
+CFLAGS=-std=c99 -Wall -g
 LDFLAGS=-lxkaapi -lpthread -lppm
 
 SRC=$(wildcard *.c)
@@ -16,6 +16,6 @@ blur: $(OBJ)
 
 
 clean:
-	rm -rf blur *.o
+	rm -rf blur *.o *.ppm
 
 .SILENT: clean

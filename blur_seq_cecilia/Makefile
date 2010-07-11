@@ -25,4 +25,6 @@ clean:
 run: blur
 	./build/blur/obj/blur
 
-.PHONY: all blur clean
+.PHONY: all blur
+	
+.SILENT: clean
