@@ -125,6 +125,8 @@ static void do_work(kaapi_stealcontext_t* sc, task_work_t* work)
   int stealres;
   range_t subrange;
 
+  printf ("range : %d to %d\n", work->range.i, work->range.j);
+
  compute_work:
   while (1)
   {
@@ -264,6 +266,9 @@ int main(int argc, char** argv)//(unsigned int* base, unsigned int nelem)
   static unsigned int base[ELEM_COUNT];
 
   int nelem = ELEM_COUNT;
+
+  for (int i=0; i < ELEM_COUNT; i++)
+    base[i] = 0;
 
   task_work_t* work;
   kaapi_thread_t* thread;
