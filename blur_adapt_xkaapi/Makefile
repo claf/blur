@@ -8,6 +8,9 @@ OUT=blur
 
 all: $(OUT)
 
+main: main.c
+	$(CC) $(CFLAGS) -gdwarf-2 -g3 -o $@ $^ $(LDFLAGS)
+
 toto: toto.c
 	$(CC) $(CFLAGS) -gdwarf-2 -g3 -o $@ $^ $(LDFLAGS)
 
