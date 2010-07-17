@@ -15,7 +15,7 @@ toto: toto.c
 	$(CC) $(CFLAGS) -gdwarf-2 -g3 -o $@ $^ $(LDFLAGS)
 
 test_queue: test_queue.o kaapi_workqueue.o
-	$(CC) $(LDFLAGS) -o $@ $<
+	$(CC) $(LDFLAGS) -o $@ $^
 
 blur: $(OBJ)
 	$(CC) $(LDFLAGS) -o $@ $^ 
@@ -25,6 +25,6 @@ blur: $(OBJ)
 
 
 clean:
-	rm -rf blur *.o *.ppm toto
+	rm -rf blur *.o *.ppm toto main test_queue
 
 .SILENT: clean
