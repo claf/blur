@@ -3,41 +3,36 @@
 
 #define STACK_MAX_ELEMENT 512
 
-struct task
+typedef struct stack
 {
-  
-} task_t;
+  void** _stack;
+  int    _beg;
+  int    _end;
+  int    _lock;
+} kaapi_stack_t;
 
-struct stack
-{
-  void* _stack;
-  int   _beg;
-  int   _end;
-  int   _lock;
-} stack_t;
+void stack_init (kaapi_stack_t* my_stack);
 
-void stack_init (stack_t* my_stack);
+int stack_size (kaapi_stack_t* my_stack);
 
-int stack_size (stack_t* my_stack);
+int stack_is_empty (kaapi_stack_t* my_stack);
 
-int stack_is_empty (stack_t* my_stack);
+void stack_push (kaapi_stack_t* my_stack, void* element);
 
-void stack_push_front (stack_t* my_stack, void* element);
+//void stack_push_back (kaapi_stack_t* my_stack, void* element);
 
-void stack_push_back (stack_t* my_stack, void* element);
+void stack_pop (kaapi_stack_t* my_stack, void* element);
+/*
+void stack_pop_safe (kaapi_stack_t* my_stack, void* element);
 
-void stack_pop (stack_t* my_stack, void* element);
+void stack_steal (kaapi_stack_t* my_stack, void* element);
 
-void stack_pop_safe (stack_t* my_stack, void* element);
-
-void stack_steal (stack_t* my_stack, void* element);
-
-void stack_steal_unsafe (stack_t* my_stack, void* element);
+void stack_steal_unsafe (kaapi_stack_t* my_stack, void* element);
 
 void lock_pop();
 
 void lock_steal();
 
 void unlock();
-
+*/
 #endif //_KAAPI_WORKQUEUE_H_
