@@ -21,18 +21,18 @@ void stack_push (kaapi_stack_t* my_stack, void* element);
 
 //void stack_push_back (kaapi_stack_t* my_stack, void* element);
 
-void stack_pop (kaapi_stack_t* my_stack, void* element);
-/*
-void stack_pop_safe (kaapi_stack_t* my_stack, void* element);
+void stack_pop (kaapi_stack_t* my_stack, void** element);
 
-void stack_steal (kaapi_stack_t* my_stack, void* element);
+//void stack_pop_safe (kaapi_stack_t* my_stack, void* element);
 
-void stack_steal_unsafe (kaapi_stack_t* my_stack, void* element);
+void stack_steal (kaapi_stack_t* my_stack, void** element);
 
-void lock_pop();
+//void stack_steal_unsafe (kaapi_stack_t* my_stack, void* element);
 
-void lock_steal();
+//void lock_pop();
 
-void unlock();
-*/
+//void lock_steal();
+
+//void unlock();
+
 #endif //_KAAPI_WORKQUEUE_H_

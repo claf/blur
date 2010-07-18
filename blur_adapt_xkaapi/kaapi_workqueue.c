@@ -31,26 +31,32 @@ void stack_push (kaapi_stack_t* my_stack, void* element)
 {
   kaapi_assert_debug (my_stack->_end < my_stack->_beg + STACK_MAX_ELEMENT);
 
-  my_stack->_end++;
   my_stack->_stack[my_stack->_end % STACK_MAX_ELEMENT] = element;
+  my_stack->_end++;
 }
 
-void stack_pop (kaapi_stack_t* my_stack, void* element)
+void stack_pop (kaapi_stack_t* my_stack, void** element)
 {
   kaapi_assert_debug (my_stack->_beg < my_stack->_end);
   
-  element = my_stack->_stack[my_stack->_beg];
+  *element = my_stack->_stack[my_stack->_beg];
   my_stack->_beg++;
 }
 
-/* void stack_pop_safe (kaapi_stack_t* my_stack, void* element);
+//void stack_pop_safe (kaapi_stack_t* my_stack, void* element);
 
-void stack_steal (kaapi_stack_t* my_stack, void* element);
+void stack_steal (kaapi_stack_t* my_stack, void** element)
+{
+  kaapi_assert_debug (my_stack->_beg < my_stack->_end);
+  
+  my_stack->_end--;
+  *element = (my_stack->_stack[my_stack->_end]);
+}
 
-void stack_steal_unsafe (kaapi_stack_t* my_stack, void* element);
+//void stack_steal_unsafe (kaapi_stack_t* my_stack, void* element);
 
-void lock_pop();
+//void lock_pop();
 
-void lock_steal();
+//void lock_steal();
 
-void unlock(); */
+//void unlock();
