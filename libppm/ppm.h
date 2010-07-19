@@ -3,7 +3,7 @@
 #include <ctype.h>
 #include <string.h>
 
-//#define PPM_DEBUG
+#define PPM_DEBUG
 
 #define min(a,b) (a < b ? a : b)
 
@@ -13,4 +13,4 @@ int ppmb_write (char *fileout_name, int xsize, int ysize, int maxrgb, int *array
 
 int *ppm_getcell (int *array, int ysize, int x, int y, int k );
 
-int ppmb_blur (int *array, int ysize, int xstart, int ystart, int xblock_size, int yblock_size);
+int ppmb_blur (int *array, int *out, int ysize, int xstart, int ystart, int xblock_size, int yblock_size);

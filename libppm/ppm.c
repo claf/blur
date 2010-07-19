@@ -293,14 +293,15 @@ int *ppm_getcell (int *array, int ysize, int x, int y, int k) {
 
 /******************************************************************************/
 
-int ppmb_blur (int *array, int ysize, int xstart, int ystart, int xblock_size, int yblock_size) 
+int ppmb_blur (int *array, int* out, int ysize, int xstart, int ystart, int xblock_size, int yblock_size) 
 {
   /* Neighbours : */
-  int *a,*b,*c,*d,*e,*f,*g,*h;
+  int accumulate;
   
   int i;
   int j;
   int k;
+  int x, y;
   int *index;
 
 #ifdef PPM_DEBUG  
@@ -314,19 +315,17 @@ int ppmb_blur (int *array, int ysize, int xstart, int ystart, int xblock_size, i
   /* f   g   h */
   /*************/
 
-  for ( i = xstart +1; i < xstart + xblock_size - 1; i++) {
-    for ( j = ystart +1; j < ystart + yblock_size - 1; j++) {
+  for ( i = xstart ; i < xstart + xblock_size; i++) {
+    for ( j = ystart ; j < ystart + yblock_size; j++) {
       for ( k = 0; k < 3; k++) {
-	index  = ppm_getcell (array, ysize, i  , j  , k);
-	a      = ppm_getcell (array, ysize, i-1, j-1, k);
-	b      = ppm_getcell (array, ysize, i  , j-1, k);
-	c      = ppm_getcell (array, ysize, i+1, j-1, k);
-	d      = ppm_getcell (array, ysize, i-1, j  , k);
-	e      = ppm_getcell (array, ysize, i+1, j  , k);
-	f      = ppm_getcell (array, ysize, i-1, j+1, k);
-	g      = ppm_getcell (array, ysize, i  , j+1, k);
-	h      = ppm_getcell (array, ysize, i+1, j+1, k);
-	*index = (*index + *a + *b + *c + *d + *e + *f + *g + *h) / 9;
+	index = ppm_getcell (out, ysize, i  , j  , k);
+	accumulate = 0;
+	for ( x = i-3; x < i+3; x++) {
+	  for ( y = j-3; y < j+3; y++) {
+	    accumulate += *(ppm_getcell (array, ysize, x, y, k));
+	  }
+	}
+	*index = accumulate / 36;
       }
     }
   }
