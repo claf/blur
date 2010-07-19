@@ -12,8 +12,11 @@
             using STEAL_HALF constant to define
         </comment>
     </note>
-    <note priority="medium" time="1279381536">
+    <note priority="medium" time="1279381536" done="1279550585">
         Benchmark reflexion
+        <comment>
+            see mac for infos
+        </comment>
     </note>
     <note priority="medium" time="1279536767">
         Add configure like system to libppm to specify --prefix
