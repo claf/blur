@@ -79,8 +79,6 @@ int dispatch_blur (int block_size)
   int yleft;
   int xstart;
   int ystart;
-  int result;
-  int dispatch = 0;
 
   xleft = xsize;
   yleft = ysize;

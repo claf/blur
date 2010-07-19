@@ -25,11 +25,6 @@ int main (int argc, char** argv)
 
   app_main_arg_t* argm;
 
-  long value_result;
-  int n;
-  int niter;
-  int i;
-  
   /* Timing : */
   t0 = kaapi_get_elapsedtime();
   

@@ -116,8 +116,6 @@ int dispatch_blur (int block_size, kaapi_thread_t* thread)
   int yleft;
   int xstart;
   int ystart;
-  int result;
-  int dispatch = 0;
 
   xleft = xsize;
   yleft = ysize;
