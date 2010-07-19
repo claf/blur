@@ -41,6 +41,7 @@ typedef struct app_main_arg_t {
 typedef struct blur_arg_t {
   //void *_this;
   void *array;
+  void *out;
   int  ysize;
   int  xstart;
   int  ystart;
@@ -87,10 +88,10 @@ KAAPI_REGISTER_TASKFORMAT ( blur_format,
 			    "blur",
 			    blur_body,
 			    sizeof (blur_arg_t),
-			    6,
-			    (kaapi_access_mode_t[]) {KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V},
-			    (kaapi_offset_t[]) {offsetof(blur_arg_t, array), offsetof(blur_arg_t, ysize), offsetof(blur_arg_t, xstart), offsetof(blur_arg_t, ystart), offsetof(blur_arg_t, xblock_size), offsetof(blur_arg_t,yblock_size)},
-			    (const struct kaapi_format_t*[]) {kaapi_ulong_format, kaapi_int_format, kaapi_int_format, kaapi_int_format, kaapi_int_format, kaapi_int_format})
+			    7,
+			    (kaapi_access_mode_t[]) {KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V},
+			    (kaapi_offset_t[]) {offsetof(blur_arg_t, array), offsetof(blur_arg_t, out), offsetof(blur_arg_t, ysize), offsetof(blur_arg_t, xstart), offsetof(blur_arg_t, ystart), offsetof(blur_arg_t, xblock_size), offsetof(blur_arg_t,yblock_size)},
+			    (const struct kaapi_format_t*[]) {kaapi_ulong_format, kaapi_ulong_format, kaapi_int_format, kaapi_int_format, kaapi_int_format, kaapi_int_format, kaapi_int_format})
 
 /* signal task decl. : */
 

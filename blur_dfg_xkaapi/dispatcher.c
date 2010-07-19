@@ -11,6 +11,7 @@
 #include <ppm.h>
 
 int  *array;
+int  *out;
 int xsize, ysize;
 
 int dispatch_blur (int block_size, kaapi_thread_t* thread);
@@ -35,6 +36,8 @@ void app_main_body (void* taskarg, kaapi_thread_t* thread)
   int  block_size;
   int  maxrgb;
   int  nb_block;
+  int  numbytes;
+
 
   char *filein_name;
   char *fileout_name;
@@ -63,6 +66,9 @@ void app_main_body (void* taskarg, kaapi_thread_t* thread)
   /* Read the data. */
   result = ppmb_read (filein_name, &xsize, &ysize, &maxrgb, &array);
 
+  numbytes = 3 * ( xsize ) * ( ysize ) * sizeof ( int );
+  out = ( int * ) malloc ( numbytes );
+
   nb_block = (block_size + xsize - 1) / block_size;
   nb_block = nb_block * nb_block;
 
@@ -90,7 +96,7 @@ void app_main_body (void* taskarg, kaapi_thread_t* thread)
   argsi->xsize = xsize;
   argsi->ysize = ysize;
   argsi->maxrgb = maxrgb;
-  argsi->array = array;
+  argsi->array = out;
   argsi->nb_block = nb_block;
 
   kaapi_thread_pushtask(thread);
@@ -117,11 +123,11 @@ int dispatch_blur (int block_size, kaapi_thread_t* thread)
   int xstart;
   int ystart;
 
-  xleft = xsize;
-  yleft = ysize;
+  xleft = xsize - 6;
+  yleft = ysize - 6;
 
-  xstart = 0;
-  ystart = 0;
+  xstart = 3;
+  ystart = 3;
   
   /* TODO : if the image isn't a square. */
   if (block_size >= xsize) {
@@ -141,6 +147,7 @@ int dispatch_blur (int block_size, kaapi_thread_t* thread)
       kaapi_task_initdfg( task, blur_body, kaapi_thread_pushdata(thread, sizeof(blur_arg_t)) );
       argb = kaapi_task_getargst( task, blur_arg_t );
       argb->array = array;
+      argb->out = out;
       argb->ysize = ysize;
       argb->xstart = xstart;
       argb->ystart = ystart;
@@ -155,8 +162,8 @@ int dispatch_blur (int block_size, kaapi_thread_t* thread)
       
     } while (xleft > 0);
     
-    xleft = xsize;
-    xstart = 0;
+    xleft = xsize - 6;
+    xstart = 3;
 
     ystart += block_size;
     yleft  -= block_size;
