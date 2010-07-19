@@ -31,7 +31,7 @@ int main (int argc, char* argv[])
   if (argc > 2)
     fileout_name = argv[2];
   else
-    fileout_name = "blured.ppm";
+    fileout_name = "img.ppm";
 
   if (argc > 3)
     block_size = atoi (argv[3]);

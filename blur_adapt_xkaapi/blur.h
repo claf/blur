@@ -9,8 +9,7 @@
 
 #include <kaapi.h>
 #include <stddef.h> // offsetof().
-
-//#define BLUR_DEBUG
+#include "../include/blur_const.h"
 
 /**********************
  * COMPONENTS METHODS *

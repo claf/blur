@@ -4,8 +4,6 @@
 #include "blur.h"
 #include "kaapi_workqueue.h"
 
-#define STEAL_HALF
-
 int  *array;
 int xsize, ysize;
 kaapi_stack_t mst;  
@@ -223,7 +221,7 @@ static void common_entry (void* arg, kaapi_thread_t* thread)
   if (argc > 2)
     fileout_name = argv[2];
   else
-    fileout_name = "blured.ppm";
+    fileout_name = "img.ppm";
 
   if (argc > 3)
     block_size = atoi (argv[3]);
