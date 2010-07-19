@@ -5,7 +5,7 @@
 
 #define STACK_MAX_ELEMENT 512
 
-pthread_mutex_t _internal_mutex;
+extern pthread_mutex_t _internal_mutex;
 
 typedef struct stack
 {

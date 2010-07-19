@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "kaapi_workqueue.h"
 
+pthread_mutex_t _internal_mutex = PTHREAD_MUTEX_INITIALIZER;
+
 void stack_init (kaapi_stack_t* my_stack)
 {
   my_stack->_beg = 0;
@@ -9,14 +11,14 @@ void stack_init (kaapi_stack_t* my_stack)
   my_stack->_lock = 0;
 
   my_stack->_stack = malloc (STACK_MAX_ELEMENT * sizeof (void*));
-  pthread_mutex_init (&_internal_mutex, NULL);
+  //pthread_mutex_init (&_internal_mutex, NULL);
 }
 
 int stack_size (kaapi_stack_t* my_stack)
 {
   pthread_mutex_lock (&_internal_mutex);
   int e = my_stack->_end;
-  //kaapi_readmem_barrier();
+  kaapi_readmem_barrier();
   int b = my_stack->_beg;
   pthread_mutex_unlock (&_internal_mutex);
   return b < e ? e-b : 0;
@@ -26,7 +28,7 @@ int stack_is_empty (kaapi_stack_t* my_stack)
 {
   pthread_mutex_lock (&_internal_mutex);
   int b = my_stack->_beg;
-  //kaapi_readmem_barrier();
+  kaapi_readmem_barrier();
   int e = my_stack->_end;
   pthread_mutex_unlock (&_internal_mutex);
   return e <= b;
