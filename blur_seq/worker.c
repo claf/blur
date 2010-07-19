@@ -7,6 +7,6 @@ void blur (void *array, void* out, int ysize, int xstart, int ystart, int xblock
 #ifdef BLUR_DEBUG
   printf ("DEBUG : blur method from component Worker\n");
 #endif
-  ppmb_blur (array, out, ysize, xstart, ystart, xblock_size, yblock_size);
+  ppmb_blur (array, out, ysize, xstart, ystart, xblock_size, yblock_size, NB_NEIGHBOURS);
   signal ();
 }

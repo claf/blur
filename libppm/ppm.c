@@ -293,7 +293,7 @@ int *ppm_getcell (int *array, int ysize, int x, int y, int k) {
 
 /******************************************************************************/
 
-int ppmb_blur (int *array, int* out, int ysize, int xstart, int ystart, int xblock_size, int yblock_size) 
+int ppmb_blur (int *array, int* out, int ysize, int xstart, int ystart, int xblock_size, int yblock_size, int neighbours) 
 {
   /* Neighbours : */
   int accumulate;
@@ -303,6 +303,7 @@ int ppmb_blur (int *array, int* out, int ysize, int xstart, int ystart, int xblo
   int k;
   int x, y;
   int *index;
+  int total_neighbours = (neighbours * 2) * (neighbours * 2);
 
 #ifdef PPM_DEBUG  
   printf ("Je traite de (%d,%d) à (%d,%d)\n", xstart, ystart,
@@ -320,12 +321,12 @@ int ppmb_blur (int *array, int* out, int ysize, int xstart, int ystart, int xblo
       for ( k = 0; k < 3; k++) {
 	index = ppm_getcell (out, ysize, i  , j  , k);
 	accumulate = 0;
-	for ( x = i-3; x < i+3; x++) {
-	  for ( y = j-3; y < j+3; y++) {
+	for ( x = i - neighbours; x < i + neighbours; x++) {
+	  for ( y = j - neighbours; y < j + neighbours; y++) {
 	    accumulate += *(ppm_getcell (array, ysize, x, y, k));
 	  }
 	}
-	*index = accumulate / 36;
+	*index = accumulate / total_neighbours;
       }
     }
   }

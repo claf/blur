@@ -43,7 +43,7 @@ void do_work (kaapi_stealcontext_t* sc)
       printf ("Stack size : %d\n", stack_size (&mst));
 #endif
   
-      ppmb_blur (argb->array, argb->out, argb->ysize, argb->xstart, argb->ystart, argb->xblock_size, argb->yblock_size);
+      ppmb_blur (argb->array, argb->out, argb->ysize, argb->xstart, argb->ystart, argb->xblock_size, argb->yblock_size, NB_NEIGHBOURS);
   
   
       thread = kaapi_self_thread ();
