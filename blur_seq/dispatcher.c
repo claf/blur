@@ -2,6 +2,10 @@
 #include <ppm.h>
 #include "blur.h"
 
+#ifdef BLUR_TIMING
+#include <kaapi.h>
+#endif
+
 int  *array;
 int xsize, ysize;
 
@@ -20,6 +24,13 @@ int main (int argc, char* argv[])
 
   char *filein_name;
   char *fileout_name;
+
+#ifdef BLUR_TIMING
+  double t0, t1;
+
+  /* Timing : */
+  t0 = kaapi_get_elapsedtime();
+#endif
 
   array = NULL;
 
@@ -70,6 +81,12 @@ int main (int argc, char* argv[])
 
   if ( result != 0 )
     printf ("ERROR : dispatch_blur error!\n" );
+
+#ifdef BLUR_TIMING
+  /* Timing : */
+  t1 = kaapi_get_elapsedtime();
+  printf("Time Task: %f\n", t1-t0);
+#endif
 }
 
 

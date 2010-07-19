@@ -20,14 +20,15 @@ int main (int argc, char** argv)
   kaapi_frame_t frame;
   kaapi_task_t* task;
   kaapi_thread_t* thread;
-
-  double t0, t1;
-
   app_main_arg_t* argm;
+
+#ifdef BLUR_TIMING
+  double t0, t1;
 
   /* Timing : */
   t0 = kaapi_get_elapsedtime();
-  
+#endif
+
   thread = kaapi_self_thread();
   kaapi_thread_save_frame(thread, &frame);
   
@@ -43,11 +44,12 @@ int main (int argc, char** argv)
 
   kaapi_sched_sync ();
 
+#ifdef BLUR_TIMING
   /* Timing : */
   t1 = kaapi_get_elapsedtime();
-
   printf("Time Task: %f\n", t1-t0);
-
+#endif
+  
   return 0;
 }
 

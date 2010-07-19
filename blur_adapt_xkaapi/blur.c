@@ -42,7 +42,6 @@ void do_work (kaapi_stealcontext_t* sc)
       printf ("Stack size : %d\n", stack_size (&mst));
 #endif
   
-      printf ("Start range (%d,  %d) to (%d, %d) in stack\n", argb->xstart, argb->ystart, argb->xstart + argb->xblock_size, argb->yblock_size);
       ppmb_blur (argb->array, argb->ysize, argb->xstart, argb->ystart, argb->xblock_size, argb->yblock_size);
   
   
@@ -77,8 +76,6 @@ static int split_work
   int nbtask = 0;
   int ssize = stack_size(&mst);
 
-  //printf("I wanna steal you reqcount : %d ssize : %d -- reqcount/ssize : %d tasks\n", reqcount, ssize, reqcount/ssize);
-
   for (; reqcount > 0; ++reqs)
   {
     if (!kaapi_request_ok(reqs))
@@ -109,7 +106,6 @@ static int split_work
     kaapi_thread_pushtask(tthread);
 
 #ifdef STEAL_HALF
-    printf("Stole you %d times\n", nbtask+1);
       }
 #endif
     kaapi_request_reply_head(sc, reqs, NULL);
@@ -296,6 +292,13 @@ int main (int argc, char** argv)
   kaapi_task_t* task;
   kaapi_frame_t frame;
 
+#ifdef BLUR_TIMING
+  double t0, t1;
+
+  /* Timing : */
+  t0 = kaapi_get_elapsedtime();
+#endif
+
   thread = kaapi_self_thread ();
   kaapi_thread_save_frame (thread, &frame);
 
@@ -311,6 +314,14 @@ int main (int argc, char** argv)
   kaapi_thread_pushtask(thread);
 
   kaapi_sched_sync();
+
+#ifdef BLUR_TIMING
+  /* Timing : */
+  t1 = kaapi_get_elapsedtime();
+  printf("Time Task: %f\n", t1-t0);
+#endif
+
+
   kaapi_thread_restore_frame(thread, &frame);
 
   return 1;
