@@ -7,6 +7,7 @@
 #endif
 
 int  *array;
+int *out;
 int xsize, ysize;
 
 int dispatch_blur (int block_size);
@@ -21,6 +22,7 @@ int main (int argc, char* argv[])
   int  block_size;
   int  maxrgb;
   int  nb_block;
+  int  numbytes;
 
   char *filein_name;
   char *fileout_name;
@@ -56,6 +58,9 @@ int main (int argc, char* argv[])
   /* Read the data. */
   result = ppmb_read (filein_name, &xsize, &ysize, &maxrgb, &array);
 
+  numbytes = 3 * ( xsize ) * ( ysize ) * sizeof ( int );
+  out = ( int * ) malloc ( numbytes );
+
   nb_block = (block_size + xsize - 1) / block_size;
   nb_block = nb_block * nb_block;
 
@@ -72,7 +77,7 @@ int main (int argc, char* argv[])
   }
 #endif
 
-  set_info (fileout_name, xsize, ysize, maxrgb, array, nb_block);
+  set_info (fileout_name, xsize, ysize, maxrgb, out, nb_block);
 
 #ifdef BLUR_DEBUG
   printf ("DEBUG : Dispatch and apply blur to data\n");
@@ -97,11 +102,11 @@ int dispatch_blur (int block_size)
   int xstart;
   int ystart;
 
-  xleft = xsize;
-  yleft = ysize;
+  xleft = xsize - 6;
+  yleft = ysize - 6;
 
-  xstart = 0;
-  ystart = 0;
+  xstart = 3;
+  ystart = 3;
   
   /* TODO : if the image isn't a square. */
   if (block_size >= xsize) {
@@ -114,15 +119,15 @@ int dispatch_blur (int block_size)
 #ifdef BLUR_DEBUG
       printf ("DEBUG : call to worker\n");
 #endif
-      blur (array, ysize, xstart, ystart, min (xleft, block_size), min (yleft, block_size));
+      blur (array, out, ysize, xstart, ystart, min (xleft, block_size), min (yleft, block_size));
 
       xstart += block_size;
       xleft  -= block_size;
       
     } while (xleft > 0);
     
-    xleft = xsize;
-    xstart = 0;
+    xleft = xsize - 6;
+    xstart = 3;
 
     ystart += block_size;
     yleft  -= block_size;

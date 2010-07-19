@@ -1,6 +1,6 @@
 #include "../include/blur_const.h"
 
-void blur (void *array, int ysize, int xstart, int ystart, int xblock_size, int yblock_size);
+void blur (void *array, void* out, int ysize, int xstart, int ystart, int xblock_size, int yblock_size);
 
 void signal ();
 
