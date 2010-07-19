@@ -9,6 +9,7 @@ void blur_body (void* taskarg, kaapi_thread_t* thread)
 
 #ifdef BLUR_DEBUG
   printf ("DEBUG : blur method from component Worker\n");
+  printf ("Thief :\nStart range (%d,  %d) to (%d, %d) in stack\n", arg0->xstart, arg0->ystart, arg0->xstart + arg0->xblock_size, arg0->yblock_size);
 #endif
 
   ppmb_blur (arg0->array, arg0->ysize, arg0->xstart, arg0->ystart, arg0->xblock_size, arg0->yblock_size);
