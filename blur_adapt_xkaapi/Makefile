@@ -1,6 +1,6 @@
 CC=gcc
-CFLAGS=-std=c99 -Wall -g #-gdwarf-2 -g3
-LDFLAGS=-lxkaapi -lpthread -lppm
+CFLAGS=-std=c99 -Wall -g $(shell pkg-config --cflags xkaapi) #-gdwarf-2 -g3
+LDFLAGS=$(shell pkg-config --libs xkaapi) -lpthread -lppm
 
 SRC=$(wildcard *.c)
 OBJ=$(SRC:.c=.o)
