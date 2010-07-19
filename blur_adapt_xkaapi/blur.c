@@ -4,14 +4,19 @@
 #include "blur.h"
 #include "kaapi_workqueue.h"
 
+#define STEAL_HALF
+
 int  *array;
 int xsize, ysize;
 kaapi_stack_t mst;  
 
+typedef struct kaapikaapi_processor_t kaapi_processor_t;
+
 typedef struct task_work
 {
   int argc;
-  char** argv;
+  char** argv;  
+  kaapi_taskadaptive_result_t* ktr;
 } task_work_t;
 
 void do_work (kaapi_stealcontext_t* sc)
@@ -23,103 +28,113 @@ void do_work (kaapi_stealcontext_t* sc)
   kaapi_task_t* task;
   signal_arg_t* args;
   kaapi_thread_t* thread;
+  kaapi_taskadaptive_result_t* ktr;
+  int success = 0;
 
-  while (!stack_is_empty(&mst))
+ compute:
+  while (1)
     {
-      stack_pop (&mst, &argb);
+      success = stack_pop (&mst, &argb);
+
+      if (!success) break;
 
 #ifdef BLUR_DEBUG
       printf ("Start range (%d,  %d) to (%d, %d) in stack\n", argb->xstart, argb->ystart, argb->xstart + argb->xblock_size, argb->yblock_size);
       printf ("Stack size : %d\n", stack_size (&mst));
 #endif
-
+  
+      printf ("Start range (%d,  %d) to (%d, %d) in stack\n", argb->xstart, argb->ystart, argb->xstart + argb->xblock_size, argb->yblock_size);
       ppmb_blur (argb->array, argb->ysize, argb->xstart, argb->ystart, argb->xblock_size, argb->yblock_size);
-
-      
+  
+  
       thread = kaapi_self_thread ();
       task = kaapi_thread_toptask(thread);
       kaapi_task_initdfg( task, signal_body, kaapi_thread_pushdata(thread, sizeof(signal_arg_t)) );
       args = kaapi_task_getargst( task, signal_arg_t );
-      
+  
       kaapi_thread_pushtask(thread);
     }
 
+  // END :
+  ktr = kaapi_get_thief_head(sc);
+  if (ktr == NULL)
+    return ;
+
+  kaapi_preempt_thief(sc, ktr, NULL, NULL, NULL);
+  goto compute;
 }
 
 // TODO : ADAPT
 
-/* static int split_work */
-/* (kaapi_stealcontext_t* sc, int reqcount, kaapi_request_t* reqs, void* arg) */
-/* { */
-/*   task_work_t* const vwork = (task_work_t*)arg; */
-/*   task_work_t* twork; */
-/*   kaapi_thread_t* tthread; */
-/*   kaapi_task_t* ttask; */
-/*   kaapi_processor_t* tproc; */
-/*   unsigned int rangesize; */
-/*   unsigned int unitsize; */
-/*   range_t subrange; */
-/*   int stealres = -1; */
-/*   int repcount = 0; */
+static int split_work
+(kaapi_stealcontext_t* sc, int reqcount, kaapi_request_t* reqs, void* arg)
+{
+  task_work_t* twork;
+  blur_arg_t* argb;
+  kaapi_thread_t* tthread;
+  kaapi_task_t* ttask;
+  kaapi_processor_t* tproc;
+  int repcount = 0;
+  int success = 0;
+  int nbtask = 0;
+  int ssize = stack_size(&mst);
 
-/*   lock_work(vwork); */
+  //printf("I wanna steal you reqcount : %d ssize : %d -- reqcount/ssize : %d tasks\n", reqcount, ssize, reqcount/ssize);
 
-/*   rangesize = get_range_size(&vwork->range); */
+  for (; reqcount > 0; ++reqs)
+  {
+    if (!kaapi_request_ok(reqs))
+      continue ;
 
-/* #if 0 /\* fixme *\/ */
-/*   if ((int)rangesize < 0) */
-/*   { */
-/*     unlock_work(vwork); */
-/*     return 0; */
-/*   } */
-/* #endif /\* fixme *\/ */
+#ifdef STEAL_HALF
+    for (nbtask = 0; nbtask <= ssize / (reqcount+1); nbtask++)
+      {
+#endif
+    tthread = kaapi_request_getthread(reqs);
+    ttask = kaapi_thread_toptask(tthread);
 
-/*   if (rangesize > 512) */
-/*   { */
-/*     unitsize = rangesize / (reqcount + 1); */
-/*     if (unitsize == 0) */
-/*     { */
-/*       unitsize = 512; */
-/*       reqcount = rangesize / 512; */
-/*     } */
+    tproc = kaapi_request_kproc(reqs);
 
-/*     stealres = steal_range */
-/*       (&subrange, &vwork->range, unitsize * reqcount); */
-/*   } */
-/*   unlock_work(vwork); */
+    kaapi_task_init(ttask, blur_body, NULL);
 
-/*   if (stealres == -1) */
-/*     return 0; */
+    //twork = alloc_work(tthread);
+    //*KAAPI_DATA(unsigned int*, twork->range.base) =
+    //*KAAPI_DATA(unsigned int*, vwork->range.base);
+    //twork->ktr = kaapi_allocate_thief_result(sc, sizeof(task_work_t), NULL);
 
-/*   for (; reqcount > 0; ++reqs) */
-/*   { */
-/*     if (!kaapi_request_ok(reqs)) */
-/*       continue ; */
+    //split_range(&twork->range, &subrange, unitsize);
 
-/*     tthread = kaapi_request_getthread(reqs); */
-/*     ttask = kaapi_thread_toptask(tthread); */
+    success = stack_steal (&mst, &argb);
+    if (!success) return 0;
 
-/*     tproc = kaapi_request_kproc(reqs); */
+    kaapi_task_setargs(ttask, argb);
+    kaapi_thread_pushtask(tthread);
 
-/*     kaapi_task_init(ttask, common_entry, NULL); */
+#ifdef STEAL_HALF
+    printf("Stole you %d times\n", nbtask+1);
+      }
+#endif
+    kaapi_request_reply_head(sc, reqs, NULL);
 
-/*     twork = alloc_work(tthread); */
-/*     *KAAPI_DATA(unsigned int*, twork->range.base) = */
-/*       *KAAPI_DATA(unsigned int*, vwork->range.base); */
-/*     twork->ktr = kaapi_allocate_thief_result(sc, sizeof(task_work_t), NULL); */
+    /* kaapi_task_init(ttask, common_entry, NULL); */
 
-/*     split_range(&twork->range, &subrange, unitsize); */
+    /* twork = alloc_work(tthread); */
+    /* *KAAPI_DATA(unsigned int*, twork->range.base) = */
+    /*   *KAAPI_DATA(unsigned int*, vwork->range.base); */
+    /* twork->ktr = kaapi_allocate_thief_result(sc, sizeof(task_work_t), NULL); */
 
-/*     kaapi_task_setargs(ttask, (void*)twork); */
-/*     kaapi_thread_pushtask(tthread); */
-/*     kaapi_request_reply_head(sc, reqs, twork->ktr); */
+    /* split_range(&twork->range, &subrange, unitsize); */
 
-/*     --reqcount; */
-/*     ++repcount; */
-/*   } */
+    /* kaapi_task_setargs(ttask, (void*)twork); */
+    /* kaapi_thread_pushtask(tthread); */
+    /* kaapi_request_reply_head(sc, reqs, twork->ktr); */
 
-/*   return repcount; */
-/* } */
+    --reqcount;
+    ++repcount;
+  }
+
+  return repcount;
+}
 
 int dispatch_blur (int block_size, kaapi_thread_t* thread) 
 {
