@@ -11,6 +11,7 @@ int xsize, ysize;
 kaapi_stack_t mst;  
 
 typedef struct kaapikaapi_processor_t kaapi_processor_t;
+kaapi_processor_t* kaapi_request_kproc(kaapi_request_t*);
 
 typedef struct task_work
 {
@@ -34,7 +35,7 @@ void do_work (kaapi_stealcontext_t* sc)
  compute:
   while (1)
     {
-      success = stack_pop (&mst, &argb);
+      success = stack_pop (&mst, (void**) &argb);
 
       if (!success) break;
 
@@ -69,7 +70,6 @@ void do_work (kaapi_stealcontext_t* sc)
 static int split_work
 (kaapi_stealcontext_t* sc, int reqcount, kaapi_request_t* reqs, void* arg)
 {
-  task_work_t* twork;
   blur_arg_t* argb;
   kaapi_thread_t* tthread;
   kaapi_task_t* ttask;
@@ -104,7 +104,7 @@ static int split_work
 
     //split_range(&twork->range, &subrange, unitsize);
 
-    success = stack_steal (&mst, &argb);
+    success = stack_steal (&mst, (void**) &argb);
     if (!success) return 0;
 
     kaapi_task_setargs(ttask, argb);
@@ -142,8 +142,6 @@ int dispatch_blur (int block_size, kaapi_thread_t* thread)
   int yleft;
   int xstart;
   int ystart;
-  int result;
-  int dispatch = 0;
 
   xleft = xsize;
   yleft = ysize;
