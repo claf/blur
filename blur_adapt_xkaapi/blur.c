@@ -5,6 +5,7 @@
 #include "kaapi_workqueue.h"
 
 int  *array;
+int  *out;
 int xsize, ysize;
 kaapi_stack_t mst;  
 
@@ -42,7 +43,7 @@ void do_work (kaapi_stealcontext_t* sc)
       printf ("Stack size : %d\n", stack_size (&mst));
 #endif
   
-      ppmb_blur (argb->array, argb->ysize, argb->xstart, argb->ystart, argb->xblock_size, argb->yblock_size);
+      ppmb_blur (argb->array, argb->out, argb->ysize, argb->xstart, argb->ystart, argb->xblock_size, argb->yblock_size);
   
   
       thread = kaapi_self_thread ();
@@ -137,11 +138,11 @@ int dispatch_blur (int block_size, kaapi_thread_t* thread)
   int xstart;
   int ystart;
 
-  xleft = xsize;
-  yleft = ysize;
+  xleft = xsize - 6;
+  yleft = ysize - 6;
 
-  xstart = 0;
-  ystart = 0;
+  xstart = 3;
+  ystart = 3;
 
   stack_init (&mst);
 
@@ -158,6 +159,7 @@ int dispatch_blur (int block_size, kaapi_thread_t* thread)
       blur_arg_t* argb = (blur_arg_t*) malloc (sizeof (blur_arg_t));
 
       argb->array = array;
+      argb->out = out;
       argb->ysize = ysize;
       argb->xstart = xstart;
       argb->ystart = ystart;
@@ -176,8 +178,8 @@ int dispatch_blur (int block_size, kaapi_thread_t* thread)
       
     } while (xleft > 0);
     
-    xleft = xsize;
-    xstart = 0;
+    xleft = xsize - 6;
+    xstart = 3;
 
     ystart += block_size;
     yleft  -= block_size;
@@ -203,6 +205,7 @@ static void common_entry (void* arg, kaapi_thread_t* thread)
   int  block_size;
   int  maxrgb;
   int  nb_block;
+  int  numbytes;
 
   char *filein_name;
   char *fileout_name;
@@ -231,6 +234,9 @@ static void common_entry (void* arg, kaapi_thread_t* thread)
   /* Read the data. */
   result = ppmb_read (filein_name, &xsize, &ysize, &maxrgb, &array);
 
+  numbytes = 3 * ( xsize ) * ( ysize ) * sizeof ( int );
+  out = ( int * ) malloc ( numbytes );
+
   nb_block = (block_size + xsize - 1) / block_size;
   nb_block = nb_block * nb_block;
 
@@ -258,7 +264,7 @@ static void common_entry (void* arg, kaapi_thread_t* thread)
   argsi->xsize = xsize;
   argsi->ysize = ysize;
   argsi->maxrgb = maxrgb;
-  argsi->array = array;
+  argsi->array = out;
   argsi->nb_block = nb_block;
 
   kaapi_thread_pushtask(thread);
