@@ -10,7 +10,7 @@
 #include <kaapi.h>
 #include <stddef.h> // offsetof().
 
-#define BLUR_DEBUG
+//#define BLUR_DEBUG
 
 /**********************
  * COMPONENTS METHODS *
