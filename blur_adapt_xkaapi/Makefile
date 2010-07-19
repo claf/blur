@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-std=c99 -Wall -g
+CFLAGS=-std=c99 -Wall -g #-gdwarf-2 -g3
 LDFLAGS=-lxkaapi -lpthread -lppm
 
 SRC=$(wildcard *.c)
@@ -9,10 +9,10 @@ OUT=blur
 all: $(OUT)
 
 main: main.c
-	$(CC) $(CFLAGS) -gdwarf-2 -g3 -o $@ $^ $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 toto: toto.c
-	$(CC) $(CFLAGS) -gdwarf-2 -g3 -o $@ $^ $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 test_queue: test_queue.o kaapi_workqueue.o
 	$(CC) $(LDFLAGS) -o $@ $^

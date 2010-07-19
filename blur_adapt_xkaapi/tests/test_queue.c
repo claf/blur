@@ -24,7 +24,26 @@ int main (int argc, char** argv)
   printf ("Stack size : %d so the stack is empty right? %s\n", stack_size (&mst),
           stack_is_empty(&mst)?"right!":"wrong!");
   
+  margs_t* arg2;
+
+  stack_pop (&mst, &arg2);
+
+  printf ("Pop works ? %s\n", arg1==arg2?"yes!":"no!");
+
+  printf ("Stack size : %d so the stack is empty right? %s\n", stack_size (&mst),
+          stack_is_empty(&mst)?"right!":"wrong!");
   
-  
+  stack_push (&mst, arg1);
+  stack_push (&mst, arg1);
+  stack_push (&mst, arg1);
+  stack_push (&mst, arg1);
+
+  printf ("Stack size : %d so the stack is empty right? %s\n", stack_size (&mst),
+          stack_is_empty(&mst)?"right!":"wrong!");
+
+  stack_steal (&mst, &arg2);
+
+  printf ("Steal works ? %s\n", arg1==arg2?"yes!":"no!");
+
   return 0;
 }

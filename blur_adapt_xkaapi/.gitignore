@@ -1,4 +1,6 @@
 test_queue
+*.ppm
+blur
 toto
 *.o
 main
