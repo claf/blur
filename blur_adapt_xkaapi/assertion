@@ -1,0 +1,9 @@
+#undef STEAL_HALF :
+$> ./blur ~/img/square.ppm img.ppm
+Bad assertion, line:226, file:'task/kaapi_task_steal.c'
+Aborted
+
+#define STEAL_HALF :
+$> ./blur ~/img/square.ppm img.ppm
+Bad assertion, line:226, file:'task/kaapi_task_steal.c'
+Aborted

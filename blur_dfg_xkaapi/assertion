@@ -1,0 +1,9 @@
+# DFG use :
+$> ./blur ~/img/square.ppm img.ppm 
+Bad assertion, line:61, file:'task/kaapi_task_splitter_dfg.c'
+Aborted
+
+$> ./blur ~/img/square.ppm img.ppm 
+Bad assertion, line:226, file:'task/kaapi_task_steal.c'
+Aborted
+
