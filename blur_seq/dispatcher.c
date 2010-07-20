@@ -28,7 +28,7 @@ int main (int argc, char* argv[])
   char *fileout_name;
 
 #ifdef BLUR_TIMING
-  double t0, t1;
+  double t0, t1, t2, t3;
 
   /* Timing : */
   t0 = kaapi_get_elapsedtime();
@@ -82,15 +82,27 @@ int main (int argc, char* argv[])
 #ifdef BLUR_DEBUG
   printf ("DEBUG : Dispatch and apply blur to data\n");
 #endif
+
+#ifdef BLUR_TIMING
+  /* Timing : */
+  t1 = kaapi_get_elapsedtime();
+#endif
+
   result = dispatch_blur (block_size);
+
+#ifdef BLUR_TIMING
+  /* Timing : */
+  t2 = kaapi_get_elapsedtime();
+#endif
+
 
   if ( result != 0 )
     printf ("ERROR : dispatch_blur error!\n" );
 
 #ifdef BLUR_TIMING
   /* Timing : */
-  t1 = kaapi_get_elapsedtime();
-  printf("Time Task: %f\n", t1-t0);
+  t3 = kaapi_get_elapsedtime();
+  printf("Total : %f\n\tfopen : %f\tblur : %f\tfwrite : %f\n", t3-t0, t1-t0, t2-t1, t3-t2);
 #endif
 }
 
@@ -102,11 +114,11 @@ int dispatch_blur (int block_size)
   int xstart;
   int ystart;
 
-  xleft = xsize - 6;
-  yleft = ysize - 6;
+  xleft = xsize - (2 * NB_NEIGHBOURS);
+  yleft = ysize - (2 * NB_NEIGHBOURS);
 
-  xstart = 3;
-  ystart = 3;
+  xstart = NB_NEIGHBOURS;
+  ystart = NB_NEIGHBOURS;
   
   /* TODO : if the image isn't a square. */
   if (block_size >= xsize) {
@@ -126,8 +138,8 @@ int dispatch_blur (int block_size)
       
     } while (xleft > 0);
     
-    xleft = xsize - 6;
-    xstart = 3;
+    xleft = xsize - (2 * NB_NEIGHBOURS);
+    xstart = NB_NEIGHBOURS;
 
     ystart += block_size;
     yleft  -= block_size;
