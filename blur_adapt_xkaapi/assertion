@@ -7,3 +7,54 @@ Aborted
 $> ./blur ~/img/square.ppm img.ppm
 Bad assertion, line:226, file:'task/kaapi_task_steal.c'
 Aborted
+
+# Apres avoir rajouter plein de sched_sync partout :
+$> ./blur /home/claferri/img/moon.ppm img3.ppm 128
+*** glibc detected *** ./blur: double free or corruption (!prev): 0x09df0d48 ***
+                                                                  ======= Backtrace: =========
+                                                                  /lib/tls/i686/cmov/libc.so.6(+0x6b591)[0xb765b591]
+                                                                  /lib/tls/i686/cmov/libc.so.6(+0x6cde8)[0xb765cde8]
+                                                                  /lib/tls/i686/cmov/libc.so.6(cfree+0x6d)[0xb765fecd]
+                                                                  /usr/local/lib/libxkaapi.so.0(kaapi_context_free+0x2d)[0xb77749ad]
+                                                                  /usr/local/lib/libxkaapi.so.0(kaapi_sched_idle+0x260)[0xb776eb90]
+                                                                  /usr/local/lib/libxkaapi.so.0(+0xc112)[0xb7774112]
+                                                                  /lib/tls/i686/cmov/libpthread.so.0(+0x596e)[0xb775496e]
+                                                                  /lib/tls/i686/cmov/libc.so.6(clone+0x5e)[0xb76bda4e]
+                                                                  ======= Memory map: ========
+                                                                  08048000-0804b000 r-xp 00000000 08:03 1584003    /home/claferri/dev/blur/blur_adapt_xkaapi/blur
+                                                                  0804b000-0804c000 r--p 00002000 08:03 1584003    /home/claferri/dev/blur/blur_adapt_xkaapi/blur
+                                                                  0804c000-0804d000 rw-p 00003000 08:03 1584003    /home/claferri/dev/blur/blur_adapt_xkaapi/blur
+                                                                  09ded000-09e0e000 rw-p 00000000 00:00 0          [heap]
+                                                                  a9e00000-b6c00000 rw-p 00000000 00:00 0 
+                                                                  b6c00000-b6c21000 rw-p 00000000 00:00 0 
+                                                                  b6c21000-b6d00000 ---p 00000000 00:00 0 
+                                                                  b6d4d000-b6d6a000 r-xp 00000000 08:03 4196680    /lib/libgcc_s.so.1
+                                                                  b6d6a000-b6d6b000 r--p 0001c000 08:03 4196680    /lib/libgcc_s.so.1
+                                                                  b6d6b000-b6d6c000 rw-p 0001d000 08:03 4196680    /lib/libgcc_s.so.1
+                                                                  b6d6c000-b6dad000 rw-p 00000000 00:00 0 
+                                                                  b6dad000-b6dae000 ---p 00000000 00:00 0 
+                                                                  b6dae000-b75f0000 rw-p 00000000 00:00 0 
+                                                                  b75f0000-b7743000 r-xp 00000000 08:03 4196629    /lib/tls/i686/cmov/libc-2.11.1.so
+                                                                  b7743000-b7744000 ---p 00153000 08:03 4196629    /lib/tls/i686/cmov/libc-2.11.1.so
+                                                                  b7744000-b7746000 r--p 00153000 08:03 4196629    /lib/tls/i686/cmov/libc-2.11.1.so
+                                                                  b7746000-b7747000 rw-p 00155000 08:03 4196629    /lib/tls/i686/cmov/libc-2.11.1.so
+                                                                  b7747000-b774a000 rw-p 00000000 00:00 0 
+                                                                  b774a000-b774c000 r-xp 00000000 08:03 3016105    /usr/local/lib/libppm.so
+                                                                  b774c000-b774d000 r--p 00001000 08:03 3016105    /usr/local/lib/libppm.so
+                                                                  b774d000-b774e000 rw-p 00002000 08:03 3016105    /usr/local/lib/libppm.so
+                                                                  b774e000-b774f000 rw-p 00000000 00:00 0 
+                                                                  b774f000-b7764000 r-xp 00000000 08:03 4196736    /lib/tls/i686/cmov/libpthread-2.11.1.so
+                                                                  b7764000-b7765000 r--p 00014000 08:03 4196736    /lib/tls/i686/cmov/libpthread-2.11.1.so
+                                                                  b7765000-b7766000 rw-p 00015000 08:03 4196736    /lib/tls/i686/cmov/libpthread-2.11.1.so
+                                                                  b7766000-b7768000 rw-p 00000000 00:00 0 
+                                                                  b7768000-b7777000 r-xp 00000000 08:03 3016078    /usr/local/lib/libxkaapi.so.0.0.0
+                                                                  b7777000-b7778000 r--p 0000e000 08:03 3016078    /usr/local/lib/libxkaapi.so.0.0.0
+                                                                  b7778000-b7779000 rw-p 0000f000 08:03 3016078    /usr/local/lib/libxkaapi.so.0.0.0
+                                                                  b7789000-b778b000 rw-p 00000000 00:00 0 
+                                                                  b778b000-b778c000 r-xp 00000000 00:00 0          [vdso]
+                                                                  b778c000-b77a7000 r-xp 00000000 08:03 4195900    /lib/ld-2.11.1.so
+                                                                  b77a7000-b77a8000 r--p 0001a000 08:03 4195900    /lib/ld-2.11.1.so
+                                                                  b77a8000-b77a9000 rw-p 0001b000 08:03 4195900    /lib/ld-2.11.1.so
+                                                                  bf7f8000-bf80d000 rw-p 00000000 00:00 0          [stack]
+                                                                  Abandon
+

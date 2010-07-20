@@ -74,8 +74,10 @@ static int split_work
   kaapi_processor_t* tproc;
   int repcount = 0;
   int success = 0;
+#ifdef STEAL_HALF
   int nbtask = 0;
   int ssize = stack_size(&mst);
+#endif
 
   for (; reqcount > 0; ++reqs)
   {
@@ -127,6 +129,7 @@ static int split_work
     --reqcount;
     ++repcount;
   }
+
 
   return repcount;
 }
@@ -226,6 +229,13 @@ static void common_entry (void* arg, kaapi_thread_t* thread)
     block_size = atoi (argv[3]);
   else
     block_size = 128;
+
+  if (argc > 4){
+      if (atoi (argv[4]) == 1){
+          #define STEAL_HALF
+      }
+  }
+
 
 #ifdef BLUR_DEBUG
   printf ("DEBUG : reading data for file %s\n", filein_name);
