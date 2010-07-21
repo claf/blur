@@ -141,11 +141,11 @@ int dispatch_blur (int block_size, kaapi_thread_t* thread)
   int xstart;
   int ystart;
 
-  xleft = xsize - 6;
-  yleft = ysize - 6;
+  xleft = xsize - (2*NB_NEIGHBOURS);
+  yleft = ysize - (2*NB_NEIGHBOURS);
 
-  xstart = 3;
-  ystart = 3;
+  xstart = NB_NEIGHBOURS;
+  ystart = NB_NEIGHBOURS;
 
   stack_init (&mst);
 
@@ -181,8 +181,8 @@ int dispatch_blur (int block_size, kaapi_thread_t* thread)
       
     } while (xleft > 0);
     
-    xleft = xsize - 6;
-    xstart = 3;
+    xleft = xsize - (2*NB_NEIGHBOURS);
+    xstart = NB_NEIGHBOURS;
 
     ystart += block_size;
     yleft  -= block_size;
