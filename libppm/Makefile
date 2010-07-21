@@ -20,8 +20,14 @@ ppm.o: ppm.c ppm.h
 clean:
 	rm -fr *.so *.dylib *.o libppm.so.1.0 
 
+ifeq ($(shell uname -s),Darwin)
+install:
+	cp libppm.dylib /usr/local/lib;
+	cp ppm.h /usr/local/include;
+else
 install:
 	cp libppm.so /usr/local/lib;
 	cp ppm.h /usr/local/include;
+endif
 
 .SILENT: clean
