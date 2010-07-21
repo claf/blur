@@ -22,7 +22,19 @@ void signal_body (void* taskarg, kaapi_thread_t* thread)
 #ifdef BLUR_DEBUG
     printf ("DEBUG : Writing data to file %s\n", _fileout_name);
 #endif
+#ifdef BLUR_TIMING
+    double t0, t1;
+    /* Timing : */
+    t0 = kaapi_get_elapsedtime();
+#endif
+
     ppmb_write (_fileout_name, _xsize, _ysize, _maxrgb, _array);
+
+#ifdef BLUR_TIMING
+    /* Timing : */
+    t1 = kaapi_get_elapsedtime();
+    printf("Fwrite Task: %f\n", t1-t0);
+#endif
   }
 }
 

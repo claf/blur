@@ -29,7 +29,7 @@ void do_work (kaapi_stealcontext_t* sc)
   signal_arg_t* args;
   kaapi_thread_t* thread;
   kaapi_taskadaptive_result_t* ktr;
-  int success = 0;
+  int success = 0;  
 
  compute:
   while (1)
@@ -296,7 +296,20 @@ static void common_entry (void* arg, kaapi_thread_t* thread)
   kaapi_stealcontext_t* const sc = kaapi_thread_pushstealcontext
     (thread, KAAPI_STEALCONTEXT_DEFAULT, split_work, arg, NULL);
 
+#ifdef BLUR_TIMING
+  double t0, t1;
+  
+  /* Timing : */
+  t0 = kaapi_get_elapsedtime();
+#endif
+
   do_work(sc);
+
+#ifdef BLUR_TIMING
+  /* Timing : */
+  t1 = kaapi_get_elapsedtime();
+  printf("Blur and fwrite Task: %f\n", t1-t0);
+#endif  
 
   kaapi_steal_finalize(sc);
 }
