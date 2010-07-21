@@ -22,12 +22,12 @@ clean:
 
 ifeq ($(shell uname -s),Darwin)
 install:
-	cp libppm.dylib /usr/local/lib;
-	cp ppm.h /usr/local/include;
+	cp libppm.dylib $(prefix)/lib;
+	cp ppm.h $(prefix)/include;
 else
 install:
-	cp libppm.so /usr/local/lib;
-	cp ppm.h /usr/local/include;
+	cp libppm.so $(prefix)/lib;
+	cp ppm.h $(prefix)/include;
 endif
 
 .SILENT: clean
