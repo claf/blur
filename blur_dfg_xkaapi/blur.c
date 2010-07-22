@@ -21,6 +21,7 @@ int main (int argc, char** argv)
   kaapi_task_t* task;
   kaapi_thread_t* thread;
   app_main_arg_t* argm;
+  int result;
 
 #ifdef BLUR_TIMING
   double t0, t1;
@@ -42,7 +43,10 @@ int main (int argc, char** argv)
 
   kaapi_thread_pushtask(thread);
 
-  kaapi_sched_sync ();
+  result = kaapi_sched_sync ();
+
+  if (result != 0)
+    printf ("kaapi_sched_sync() probleme : %d\n", result);
 
 #ifdef BLUR_TIMING
   /* Timing : */
