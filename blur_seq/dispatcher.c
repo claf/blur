@@ -61,7 +61,7 @@ int main (int argc, char* argv[])
   numbytes = 3 * ( xsize ) * ( ysize ) * sizeof ( int );
   out = ( int * ) malloc ( numbytes );
 
-  nb_block = (block_size + xsize - 1) / block_size;
+  nb_block = (block_size + (xsize - (2*NB_NEIGHBOURS)) - 1) / block_size;
   nb_block = nb_block * nb_block;
 
   if ( result != 0 )
