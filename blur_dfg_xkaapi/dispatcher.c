@@ -69,7 +69,7 @@ void app_main_body (void* taskarg, kaapi_thread_t* thread)
   numbytes = 3 * ( xsize ) * ( ysize ) * sizeof ( int );
   out = ( int * ) malloc ( numbytes );
 
-  nb_block = (block_size + xsize - 1) / block_size;
+  nb_block = (block_size + (xsize - (2*NB_NEIGHBOURS)) - 1) / block_size;
   nb_block = nb_block * nb_block;
 
   if ( result != 0 )
@@ -123,11 +123,11 @@ int dispatch_blur (int block_size, kaapi_thread_t* thread)
   int xstart;
   int ystart;
 
-  xleft = xsize - 6;
-  yleft = ysize - 6;
+  xleft = xsize - (2*NB_NEIGHBOURS);
+  yleft = ysize - (2*NB_NEIGHBOURS);
 
-  xstart = 3;
-  ystart = 3;
+  xstart = NB_NEIGHBOURS;
+  ystart = NB_NEIGHBOURS;
   
   /* TODO : if the image isn't a square. */
   if (block_size >= xsize) {
@@ -162,8 +162,8 @@ int dispatch_blur (int block_size, kaapi_thread_t* thread)
       
     } while (xleft > 0);
     
-    xleft = xsize - 6;
-    xstart = 3;
+    xleft = xsize - (2*NB_NEIGHBOURS);
+    xstart = NB_NEIGHBOURS;
 
     ystart += block_size;
     yleft  -= block_size;
