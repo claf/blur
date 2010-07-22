@@ -16,7 +16,7 @@ void signal_body (void* taskarg, kaapi_thread_t* thread)
 
   static int count = 0;
 
-  count = count + 1;
+  __sync_fetch_and_add (&count, 1);
 
   if (count == _nb_block) {
 #ifdef BLUR_DEBUG
