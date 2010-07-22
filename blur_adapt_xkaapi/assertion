@@ -1,3 +1,9 @@
+$> rm -fr toto.ppm &&  LD_LIBRARY_PATH=$HOME/opt/lib/ ./blur ../moon.ppm toto.ppm ; ls
+Blur and fwrite Task: 0.073339
+Bad assertion, line:136, file:'task/kaapi_stack_execframe.c'
+Aborted
+
+
 $> LD_LIBRARY_PATH=$HOME/opt/lib/ ./blur ../moon.ppm 
 Bad assertion, line:61, file:'task/kaapi_task_splitter_dfg.c'
 Aborted
