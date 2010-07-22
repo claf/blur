@@ -1,3 +1,7 @@
+$> LD_LIBRARY_PATH=$HOME/opt/lib/ ./blur ../moon.ppm 
+Bad assertion, line:61, file:'task/kaapi_task_splitter_dfg.c'
+Aborted
+
 #undef STEAL_HALF :
 $> ./blur ~/img/square.ppm img.ppm
 Bad assertion, line:226, file:'task/kaapi_task_steal.c'
