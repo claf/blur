@@ -26,23 +26,21 @@ void signal_body (void* taskarg, kaapi_thread_t* thread)
   }
 }
 
-void set_info_body (void* taskarg, kaapi_thread_t* thread)
+void set_info (char *fileout_name, int xsize, int ysize, int maxrgb, void *array, int nb_block)
 {
-  set_info_arg_t* arg0 = (set_info_arg_t*) taskarg;
-
 #ifdef BLUR_DEBUG
   printf ("DEBUG : set_info method from component Finalizer\n");
-  printf ("DEBUG : Info for image %s :\n", arg0->fileout_name);
-  printf ("\twidth :%d\n", arg0->xsize);
-  printf ("\theight :%d\n", arg0->ysize);
-  printf ("\tmax color :%d\n", arg0->maxrgb);
-  printf ("\tnb_block : %d\n", arg0->nb_block);
+  printf ("DEBUG : Info for image %s :\n", fileout_name);
+  printf ("\twidth :%d\n", xsize);
+  printf ("\theight :%d\n", ysize);
+  printf ("\tmax color :%d\n", maxrgb);
+  printf ("\tnb_block : %d\n", nb_block);
 #endif
 
-  _fileout_name = arg0->fileout_name;
-  _xsize        = arg0->xsize;
-  _ysize        = arg0->ysize;
-  _maxrgb       = arg0->maxrgb;
-  _array        = arg0->array;
-  _nb_block     = arg0->nb_block;
+  _fileout_name = fileout_name;
+  _xsize        = xsize;
+  _ysize        = ysize;
+  _maxrgb       = maxrgb;
+  _array        = array;
+  _nb_block     = nb_block;
 }

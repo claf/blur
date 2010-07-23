@@ -86,23 +86,7 @@ void app_main_body (void* taskarg, kaapi_thread_t* thread)
 #endif
 
   /* REPLACEMENT BEG */
-  kaapi_task_t* task;
-  set_info_arg_t* argsi;
-
-  task = kaapi_thread_toptask(thread);
-  kaapi_task_initdfg( task, set_info_body, kaapi_thread_pushdata(thread, sizeof(set_info_arg_t)) );
-  argsi = kaapi_task_getargst( task, set_info_arg_t );
-  argsi->fileout_name = fileout_name;
-  argsi->xsize = xsize;
-  argsi->ysize = ysize;
-  argsi->maxrgb = maxrgb;
-  argsi->array = out;
-  argsi->nb_block = nb_block;
-
-  kaapi_thread_pushtask(thread);
-
-
-  kaapi_sched_sync( );
+  set_info (fileout_name, xsize, ysize, maxrgb, out, nb_block);
 
   /* REPLACEMENT END */
 
