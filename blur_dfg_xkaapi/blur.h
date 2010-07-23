@@ -20,7 +20,7 @@ void app_main_body (void* taskarg, kaapi_thread_t* thread);
 // blur method from Work interface.
 void blur_body     (void* taskarg, kaapi_thread_t* thread);
 // signal meth from Collect interf.
-void signal_body   (void* taskarg, kaapi_thread_t* thread);
+void signal_body   ();
 // set_info m. from Collect interf.
 void set_info (char *fileout_name, int xsize, int ysize, int maxrgb, void *array, int nb_block);
 
@@ -50,12 +50,6 @@ typedef struct blur_arg_t {
   int  yblock_size;
 } blur_arg_t;
 
-/* signal argument structure : */
-
-typedef struct signal_arg_t {
-  //void* _this;
-} signal_arg_t;
-
 /*********************
  * TASKS DECLARATION *
  *********************/
@@ -82,14 +76,4 @@ KAAPI_REGISTER_TASKFORMAT ( blur_format,
 			    (kaapi_offset_t[]) {offsetof(blur_arg_t, array), offsetof(blur_arg_t, out), offsetof(blur_arg_t, ysize), offsetof(blur_arg_t, xstart), offsetof(blur_arg_t, ystart), offsetof(blur_arg_t, xblock_size), offsetof(blur_arg_t,yblock_size)},
 			    (const struct kaapi_format_t*[]) {kaapi_ulong_format, kaapi_ulong_format, kaapi_int_format, kaapi_int_format, kaapi_int_format, kaapi_int_format, kaapi_int_format})
 
-/* signal task decl. : */
-
-KAAPI_REGISTER_TASKFORMAT ( signal_format,
-			    "signal",
-			    signal_body,
-			    sizeof (signal_arg_t),
-			    0,
-			    (kaapi_access_mode_t[]) {},
-			    (kaapi_offset_t[]) {},
-			    (const struct kaapi_format_t*[]) {})
 

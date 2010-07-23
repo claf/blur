@@ -8,7 +8,7 @@ int _maxrgb;
 int *_array;
 int _nb_block;
 
-void signal_body (void* taskarg, kaapi_thread_t* thread)
+void signal_body ()
 {
 #ifdef BLUR_DEBUG
   printf ("DEBUG : signal method from component Finalizer\n");
