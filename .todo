@@ -27,8 +27,11 @@
     <note priority="veryhigh" time="1280084695">
         Gnuplot script for tracing
     </note>
-    <note priority="high" time="1280084665">
+    <note priority="high" time="1280084665" done="1280085337">
         Ignore unsuccessfull run (xkaapi)
+        <comment>
+            done
+        </comment>
     </note>
     <note priority="medium" time="1279536767">
         Add configure like system to libppm to specify --prefix
