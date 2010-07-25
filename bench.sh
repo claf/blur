@@ -2,7 +2,7 @@
 
 echo "Starting Benchs";
 
-BINARIES='blur_seq blur_adapt_xkaapi blur_adapt_xkaapi_half blur_dfg_xkaapi'
+BINARIES='blur_adapt_xkaapi blur_adapt_xkaapi_half blur_dfg_xkaapi blur_seq'
 IMG=moon
 ORIGIMG=/home/claferri/dev/blur/moon_blured.ppm
 DIR=/home/claferri/dev/blur/data/
@@ -33,8 +33,8 @@ do
 	for block_size in `seq 20 10 200`
 	do
 	    echo -n "$block_size "
-	    ./$prog ../$IMG.ppm $DIR$IMG"_"$prog"_"$execution"_"$block_size.ppm $block_size $half_steal >> $DIR"Time_"$prog"_"$block_size.txt
-	    diff $DIR$IMG"_"$prog"_"$execution"_"$block_size.ppm $ORIGIMG || echo "File $IMG"_"$prog"_"$execution"_"$block_size.ppm differ from original!"
+	    ./$prog ../$IMG.ppm $DIR$IMG"_"$prog"_"$execution"_"$block_size.ppm $block_size $half_steal > tmp.txt
+	    diff $DIR$IMG"_"$prog"_"$execution"_"$block_size.ppm $ORIGIMG && cat tmp.txt >> $DIR"Time_"$prog"_"$block_size.txt || echo "File $IMG"_"$prog"_"$execution"_"$block_size.ppm differ from original!"
 	done
     done
 done
