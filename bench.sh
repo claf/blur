@@ -9,6 +9,9 @@ DIR=/home/claferri/dev/blur/data/
 
 LD_LIBRARY_PATH=/home/claferri/opt/lib/
 
+./clean.sh
+./make.sh
+
 mkdir -p $DIR
 cd bin
 
