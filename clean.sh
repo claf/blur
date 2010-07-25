@@ -9,4 +9,4 @@ cd libppm;
 make clean && echo -n "." || echo -e "libppm : \tNok";
 echo "";
 cd ..;
-rm -fr bin/ 
+rm -fr bin/ data/ 
