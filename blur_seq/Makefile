@@ -1,5 +1,6 @@
 CC=gcc
-CFLAGS=-std=c99 -Wall -g -I/home/claferri/opt/include/
+#CFLAGS=-std=c99 -Wall -g -I/home/claferri/opt/include/
+CFLAGS=-std=c99 -Wall -O3 -I/home/claferri/opt/include/
 LDFLAGS=-lppm -L/home/claferri/opt/lib/
 
 SRC=$(wildcard *.c)

@@ -1,5 +1,6 @@
 CC=gcc
-CFLAGS=-std=c99 -Wall -g $(shell pkg-config --cflags xkaapi) #-gdwarf-2 -g3
+#CFLAGS=-std=c99 -Wall -g $(shell pkg-config --cflags xkaapi) #-gdwarf-2 -g3
+CFLAGS=-std=c99 -Wall -O3 $(shell pkg-config --cflags xkaapi) 
 LDFLAGS=$(shell pkg-config --libs xkaapi) -lpthread -lppm
 
 SRC=$(wildcard *.c)
