@@ -213,6 +213,13 @@ static void common_entry (void* arg, kaapi_thread_t* thread)
   char *filein_name;
   char *fileout_name;
 
+#ifdef BLUR_TIMING
+  double t0, t1;
+
+  /* Timing : */
+  t0 = kaapi_get_elapsedtime();
+#endif
+
   array = NULL;
 
   if (argc > 1)
@@ -282,6 +289,12 @@ static void common_entry (void* arg, kaapi_thread_t* thread)
 
   kaapi_sched_sync( );
 
+#ifdef BLUR_TIMING
+  /* Timing : */
+  t1 = kaapi_get_elapsedtime();
+  printf("fopen %f\n", t1-t0);
+#endif
+
   /* REPLACEMENT END */
 
 #ifdef BLUR_DEBUG
@@ -297,8 +310,6 @@ static void common_entry (void* arg, kaapi_thread_t* thread)
     (thread, KAAPI_STEALCONTEXT_DEFAULT, split_work, arg, NULL);
 
 #ifdef BLUR_TIMING
-  double t0, t1;
-  
   /* Timing : */
   t0 = kaapi_get_elapsedtime();
 #endif
@@ -308,7 +319,7 @@ static void common_entry (void* arg, kaapi_thread_t* thread)
 #ifdef BLUR_TIMING
   /* Timing : */
   t1 = kaapi_get_elapsedtime();
-  printf("Blur and fwrite Task: %f\n", t1-t0);
+  printf("blur %f\n", t1-t0);
 #endif  
 
   kaapi_steal_finalize(sc);
@@ -344,14 +355,13 @@ int main (int argc, char** argv)
 
   kaapi_sched_sync();
 
+  kaapi_thread_restore_frame(thread, &frame);
+
 #ifdef BLUR_TIMING
   /* Timing : */
   t1 = kaapi_get_elapsedtime();
-  printf("Time Task: %f\n", t1-t0);
+  printf("total %f\n", t1-t0);
 #endif
-
-
-  kaapi_thread_restore_frame(thread, &frame);
 
   return 1;
 }

@@ -33,7 +33,7 @@ void signal_body (void* taskarg, kaapi_thread_t* thread)
 #ifdef BLUR_TIMING
     /* Timing : */
     t1 = kaapi_get_elapsedtime();
-    printf("Fwrite Task: %f\n", t1-t0);
+    printf("fwrite %f\n", t1-t0);
 #endif
   }
 }
