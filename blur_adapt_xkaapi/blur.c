@@ -322,6 +322,7 @@ static void common_entry (void* arg, kaapi_thread_t* thread)
   printf("blur %f\n", t1-t0);
 #endif  
 
+  kaapi_sched_sync();
   kaapi_steal_finalize(sc);
 }
 
