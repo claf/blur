@@ -3,7 +3,7 @@
 #ifndef _KAAPI_WORKQUEUE_H_
 #define _KAAPI_WORKQUEUE_H_
 
-#define STACK_MAX_ELEMENT 512
+#define STACK_MAX_ELEMENT 2048
 
 extern pthread_mutex_t _internal_mutex;
 
