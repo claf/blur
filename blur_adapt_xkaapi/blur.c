@@ -257,6 +257,13 @@ static void common_entry (void* arg, kaapi_thread_t* thread)
   nb_block = (block_size + (xsize - (2*NB_NEIGHBOURS) - 1)) / block_size;
   nb_block = nb_block * nb_block;
 
+  if (nb_block > STACK_MAX_ELEMENT) 
+  {
+    printf ("Not enough space in stack : %d < %d\n", STACK_MAX_ELEMENT, nb_block);
+    abort();
+  }
+    
+
   if ( result != 0 )
     printf ("ERROR : ppmb_read error!\n" );
 #ifdef BLUR_DEBUG
