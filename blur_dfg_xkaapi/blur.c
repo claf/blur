@@ -51,7 +51,7 @@ int main (int argc, char** argv)
 #ifdef BLUR_TIMING
   /* Timing : */
   t1 = kaapi_get_elapsedtime();
-  printf("Time Task: %f\n", t1-t0);
+  printf("total %f\n", t1-t0);
 #endif
   
   return 0;

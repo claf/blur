@@ -42,6 +42,13 @@ void app_main_body (void* taskarg, kaapi_thread_t* thread)
   char *filein_name;
   char *fileout_name;
 
+#ifdef BLUR_TIMING
+  double t0, t1;
+
+  /* Timing : */
+  t0 = kaapi_get_elapsedtime();
+#endif
+
   array = NULL;
 
   if (argc > 1)
@@ -62,6 +69,8 @@ void app_main_body (void* taskarg, kaapi_thread_t* thread)
 #ifdef BLUR_DEBUG
   printf ("DEBUG : reading data for file %s\n", filein_name);
 #endif
+
+  printf ("# Blur DFG : %s -> %s :: %d\n", filein_name, fileout_name, block_size);
   
   /* Read the data. */
   result = ppmb_read (filein_name, &xsize, &ysize, &maxrgb, &array);
@@ -104,6 +113,12 @@ void app_main_body (void* taskarg, kaapi_thread_t* thread)
 
   kaapi_sched_sync( );
 
+#ifdef BLUR_TIMING
+  /* Timing : */
+  t1 = kaapi_get_elapsedtime();
+  printf("fopen %f\n", t1-t0);
+#endif
+
   /* REPLACEMENT END */
 
 #ifdef BLUR_DEBUG
@@ -135,6 +150,10 @@ int dispatch_blur (int block_size, kaapi_thread_t* thread)
     return 0;
   }
   
+#ifdef BLUR_TIMING
+  double t0, t1, tTot = 0;
+#endif
+
   do {
     do {
 #ifdef BLUR_DEBUG
@@ -142,6 +161,10 @@ int dispatch_blur (int block_size, kaapi_thread_t* thread)
 #endif
       kaapi_task_t* task;
       blur_arg_t* argb;
+
+#ifdef BLUR_TIMING
+      t0 = kaapi_get_elapsedtime();
+#endif
 
       task = kaapi_thread_toptask(thread);
       kaapi_task_initdfg( task, blur_body, kaapi_thread_pushdata(thread, sizeof(blur_arg_t)) );
@@ -156,6 +179,10 @@ int dispatch_blur (int block_size, kaapi_thread_t* thread)
 	
       kaapi_thread_pushtask(thread);
       
+#ifdef BLUR_TIMING
+      t1 = kaapi_get_elapsedtime();
+      tTot += t1-t0;
+#endif
 
       xstart += block_size;
       xleft  -= block_size;
@@ -169,7 +196,12 @@ int dispatch_blur (int block_size, kaapi_thread_t* thread)
     yleft  -= block_size;
 
   } while (yleft > 0);
-  
-    
+
+  kaapi_sched_sync( );
+
+#ifdef BLUR_TIMING
+  printf ("blur %f\n", tTot);
+#endif
+
   return 0;
 }

@@ -93,6 +93,7 @@ int main (int argc, char* argv[])
 #ifdef BLUR_TIMING
   /* Timing : */
   t1 = get_elapsedtime();
+  printf("fopen %f\n", t1-t0);
 #endif
 
   result = dispatch_blur (block_size);
@@ -103,7 +104,7 @@ int main (int argc, char* argv[])
 #ifdef BLUR_TIMING
   /* Timing : */
   t2 = get_elapsedtime();
-  printf("total %f\nfopen %f\n", t2-t0, t1-t0);
+  printf("total %f\n", t2-t0);
 #endif
 }
 
