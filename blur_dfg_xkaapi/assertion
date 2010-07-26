@@ -1,3 +1,9 @@
+$> LD_LIBRARY_PATH=$HOME/opt/lib ./blur ../moon.ppm toto.ppm 10
+# Blur DFG : ../moon.ppm -> toto.ppm :: 10
+fopen 0.082459
+Bad assertion, line:696, file:'/home/claferri/opt/include/kaapi.h'
+Aborted
+
 $> ./blur ../moon.ppm img.ppm 20
 # Blur DFG : ../moon.ppm -> img.ppm :: 20
 fopen 0.092816
