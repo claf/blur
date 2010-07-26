@@ -7,6 +7,7 @@
 int  *array;
 int  *out;
 int xsize, ysize;
+int half_steal;
 kaapi_stack_t mst;  
 
 typedef struct kaapikaapi_processor_t kaapi_processor_t;
@@ -74,20 +75,22 @@ static int split_work
   kaapi_processor_t* tproc;
   int repcount = 0;
   int success = 0;
-#ifdef STEAL_HALF
   int nbtask = 0;
   int ssize = stack_size(&mst);
-#endif
+  int nb_push = 0;
 
   for (; reqcount > 0; ++reqs)
   {
     if (!kaapi_request_ok(reqs))
       continue ;
 
-#ifdef STEAL_HALF
-    for (nbtask = 0; nbtask <= ssize / (reqcount+1); nbtask++)
+    nb_push = 0;
+
+    if (half_steal == 1)
+      nb_push = ssize / (reqcount+1);
+
+    for (nbtask = 0; nbtask <= nb_push; nbtask++)
       {
-#endif
     tthread = kaapi_request_getthread(reqs);
     ttask = kaapi_thread_toptask(tthread);
 
@@ -108,9 +111,7 @@ static int split_work
     kaapi_task_setargs(ttask, argb);
     kaapi_thread_pushtask(tthread);
 
-#ifdef STEAL_HALF
       }
-#endif
     kaapi_request_reply_head(sc, reqs, NULL);
 
     /* kaapi_task_init(ttask, common_entry, NULL); */
@@ -238,16 +239,15 @@ static void common_entry (void* arg, kaapi_thread_t* thread)
     block_size = 128;
 
   if (argc > 4){
-      if (atoi (argv[4]) == 1){
-          #define STEAL_HALF
-      }
+    half_steal = atoi (argv[4]);
   }
-
 
 #ifdef BLUR_DEBUG
   printf ("DEBUG : reading data for file %s\n", filein_name);
 #endif
   
+  printf ("# Blur Adapt : %s -> %s :: %d || half-steal? %s\n", filein_name, fileout_name, block_size, half_steal?"yes":"no");
+
   /* Read the data. */
   result = ppmb_read (filein_name, &xsize, &ysize, &maxrgb, &array);
 
