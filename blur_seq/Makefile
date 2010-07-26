@@ -1,6 +1,6 @@
 CC=gcc
-CFLAGS=-std=c99 -Wall -g -I/home/claferri/opt/include/ $(shell pkg-config --cflags xkaapi)
-LDFLAGS=-lppm -L/home/claferri/opt/lib/ $(shell pkg-config --libs xkaapi)
+CFLAGS=-std=c99 -Wall -g -I/home/claferri/opt/include/
+LDFLAGS=-lppm -L/home/claferri/opt/lib/
 
 SRC=$(wildcard *.c)
 OBJ=$(SRC:.c=.o)
