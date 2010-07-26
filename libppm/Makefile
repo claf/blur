@@ -1,4 +1,5 @@
 CC=gcc
+prefix=/usr/local
 
 all:
 
