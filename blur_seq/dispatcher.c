@@ -2,13 +2,18 @@
 #include <ppm.h>
 #include "blur.h"
 
-#ifdef BLUR_TIMING
-#include <kaapi.h>
-#endif
-
 int  *array;
 int *out;
 int xsize, ysize;
+
+double get_elapsedtime ()
+{
+  struct timeval tv;
+  int err = gettimeofday( &tv, 0);
+  if (err  !=0) return 0;
+  return (double)tv.tv_sec + 1e-6*(double)tv.tv_usec;
+}
+
 
 int dispatch_blur (int block_size);
 
@@ -28,10 +33,10 @@ int main (int argc, char* argv[])
   char *fileout_name;
 
 #ifdef BLUR_TIMING
-  double t0, t1, t2, t3;
+  double t0, t1, t2;
 
   /* Timing : */
-  t0 = kaapi_get_elapsedtime();
+  t0 = get_elapsedtime();
 #endif
 
   array = NULL;
@@ -55,6 +60,8 @@ int main (int argc, char* argv[])
   printf ("DEBUG : reading data for file %s\n", filein_name);
 #endif
   
+  printf ("# Blur Sequentiel : %s -> %s :: %d\n", filein_name, fileout_name, block_size);
+
   /* Read the data. */
   result = ppmb_read (filein_name, &xsize, &ysize, &maxrgb, &array);
 
@@ -85,24 +92,18 @@ int main (int argc, char* argv[])
 
 #ifdef BLUR_TIMING
   /* Timing : */
-  t1 = kaapi_get_elapsedtime();
+  t1 = get_elapsedtime();
 #endif
 
   result = dispatch_blur (block_size);
-
-#ifdef BLUR_TIMING
-  /* Timing : */
-  t2 = kaapi_get_elapsedtime();
-#endif
-
 
   if ( result != 0 )
     printf ("ERROR : dispatch_blur error!\n" );
 
 #ifdef BLUR_TIMING
   /* Timing : */
-  t3 = kaapi_get_elapsedtime();
-  printf("Total : %f\n\tfopen : %f\tblur : %f\tfwrite : %f\n", t3-t0, t1-t0, t2-t1, t3-t2);
+  t2 = get_elapsedtime();
+  printf("total %f\nfopen %f\n", t2-t0, t1-t0);
 #endif
 }
 
@@ -126,12 +127,26 @@ int dispatch_blur (int block_size)
     return 0;
   }
   
+#ifdef BLUR_TIMING
+  double t0, t1, tTot = 0;
+#endif
+
   do {
     do {
 #ifdef BLUR_DEBUG
       printf ("DEBUG : call to worker\n");
 #endif
+
+#ifdef BLUR_TIMING
+  t0 = get_elapsedtime();
+#endif
       blur (array, out, ysize, xstart, ystart, min (xleft, block_size), min (yleft, block_size));
+#ifdef BLUR_TIMING
+  t1 = get_elapsedtime();
+  tTot += t1-t0;
+#endif
+      signal ();
+
 
       xstart += block_size;
       xleft  -= block_size;
@@ -145,7 +160,10 @@ int dispatch_blur (int block_size)
     yleft  -= block_size;
 
   } while (yleft > 0);
-  
+
+#ifdef BLUR_TIMING
+  printf ("blur %f\n", tTot);
+#endif
     
   return 0;
 }

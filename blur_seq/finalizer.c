@@ -20,10 +20,23 @@ void signal ()
   count = count + 1;
 
   if (count == _nb_block) {
+#ifdef BLUR_TIMING
+    double t0, t1;
+    /* Timing : */
+    t0 = get_elapsedtime();
+#endif
+
 #ifdef BLUR_DEBUG    
     printf ("DEBUG : Writing data to file outa.ppm\n");
 #endif
     ppmb_write (_fileout_name, _xsize, _ysize, _maxrgb, _array);
+
+#ifdef BLUR_TIMING
+    /* Timing : */
+    t1 = get_elapsedtime();
+    printf ("fwrite %f\n", t1-t0);
+#endif
+
   }
 }
 
