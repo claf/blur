@@ -1,3 +1,9 @@
+$> ./blur ../moon.ppm img.ppm 20
+# Blur DFG : ../moon.ppm -> img.ppm :: 20
+fopen 0.092816
+Bad assertion, line:61, file:'task/kaapi_task_splitter_dfg.c'
+Aborted
+
 # DFG use :
 $> ./blur ~/img/square.ppm img.ppm 
 Bad assertion, line:61, file:'task/kaapi_task_splitter_dfg.c'
