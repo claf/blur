@@ -12,6 +12,12 @@
             using STEAL_HALF constant to define
         </comment>
     </note>
+    <note priority="high" time="1280084665" done="1280085337">
+        Ignore unsuccessfull run (xkaapi)
+        <comment>
+            done
+        </comment>
+    </note>
     <note priority="medium" time="1279381536" done="1279550585">
         Benchmark reflexion
         <comment>
@@ -27,11 +33,14 @@
     <note priority="veryhigh" time="1280084695">
         Gnuplot script for tracing
     </note>
-    <note priority="high" time="1280084665" done="1280085337">
-        Ignore unsuccessfull run (xkaapi)
-        <comment>
-            done
-        </comment>
+    <note priority="veryhigh" time="1280264666">
+        Variation du nombre de threads
+    </note>
+    <note priority="veryhigh" time="1280264690">
+        script awk instead of kill/yank rectangle in emacs
+    </note>
+    <note priority="high" time="1280264701">
+        mail TG for assert issues
     </note>
     <note priority="medium" time="1279536767">
         Add configure like system to libppm to specify --prefix
