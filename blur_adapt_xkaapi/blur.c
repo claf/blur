@@ -78,6 +78,7 @@ static int split_work
   int nbtask = 0;
   int ssize = stack_size(&mst);
   int nb_push = 0;
+  int first = 1;
 
   for (; reqcount > 0; ++reqs)
   {
@@ -86,8 +87,11 @@ static int split_work
 
     nb_push = 0;
 
-    if (half_steal == 1)
+    if (half_steal == 1 && first == 1)
+    {
       nb_push = ssize / (reqcount+1);
+      first = 0;
+    }
 
     for (nbtask = 0; nbtask <= nb_push; nbtask++)
     {
