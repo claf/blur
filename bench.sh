@@ -2,7 +2,7 @@
 
 echo "Starting Benchs";
 
-BINARIES='blur_adapt_xkaapi blur_adapt_xkaapi_half blur_dfg_xkaapi'
+BINARIES='blur_adapt_xkaapi blur_adapt_xkaapi_half blur_dfg_xkaapi blur_seq'
 #BINARIES='blur_seq'
 IMG=moon
 ORIGIMG=/home/claferri/dev/blur/moon_blured.ppm
