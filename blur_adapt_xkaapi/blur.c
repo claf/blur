@@ -90,47 +90,28 @@ static int split_work
       nb_push = ssize / (reqcount+1);
 
     for (nbtask = 0; nbtask <= nb_push; nbtask++)
-      {
-    tthread = kaapi_request_getthread(reqs);
-    ttask = kaapi_thread_toptask(tthread);
+    {
+      tthread = kaapi_request_getthread(reqs);
+      ttask = kaapi_thread_toptask(tthread);
 
-    tproc = kaapi_request_kproc(reqs);
+      tproc = kaapi_request_kproc(reqs);
 
-    kaapi_task_init(ttask, blur_body, NULL);
+      kaapi_task_init(ttask, blur_body, NULL);
 
-    //twork = alloc_work(tthread);
-    //*KAAPI_DATA(unsigned int*, twork->range.base) =
-    //*KAAPI_DATA(unsigned int*, vwork->range.base);
-    //twork->ktr = kaapi_allocate_thief_result(sc, sizeof(task_work_t), NULL);
+      success = stack_steal (&mst, (void**) &argb);
 
-    //split_range(&twork->range, &subrange, unitsize);
+      if (!success) return 0;
 
-    success = stack_steal (&mst, (void**) &argb);
-    if (!success) return 0;
+      kaapi_task_setargs(ttask, argb);
+      kaapi_thread_pushtask(tthread);
 
-    kaapi_task_setargs(ttask, argb);
-    kaapi_thread_pushtask(tthread);
+    }
 
-      }
     kaapi_request_reply_head(sc, reqs, NULL);
-
-    /* kaapi_task_init(ttask, common_entry, NULL); */
-
-    /* twork = alloc_work(tthread); */
-    /* *KAAPI_DATA(unsigned int*, twork->range.base) = */
-    /*   *KAAPI_DATA(unsigned int*, vwork->range.base); */
-    /* twork->ktr = kaapi_allocate_thief_result(sc, sizeof(task_work_t), NULL); */
-
-    /* split_range(&twork->range, &subrange, unitsize); */
-
-    /* kaapi_task_setargs(ttask, (void*)twork); */
-    /* kaapi_thread_pushtask(tthread); */
-    /* kaapi_request_reply_head(sc, reqs, twork->ktr); */
 
     --reqcount;
     ++repcount;
   }
-
 
   return repcount;
 }
