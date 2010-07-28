@@ -24,8 +24,11 @@
             see mac for infos
         </comment>
     </note>
-    <note priority="veryhigh" time="1280084621">
+    <note priority="veryhigh" time="1280084621" done="1280304092">
         Same timing output for all
+        <comment>
+            done
+        </comment>
     </note>
     <note priority="veryhigh" time="1280084683">
         Awk script for average
