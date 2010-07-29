@@ -23,7 +23,7 @@ cd bin
 #   numa=""
 # fi
 
-for thread in "1 2 4 8"
+for thread in 1 2 4 8
 do
     for prog in $BINARIES
     do
@@ -44,7 +44,7 @@ do
 	    KAAPI_CPUCOUNT=$thread
 	fi
 	
-	for execution in `seq 1 50`
+	for execution in `seq 1 20`
 	do
 	    echo "$execution for various block size :"
 	    for block_size in `seq 20 20 200`
