@@ -102,7 +102,8 @@ static int split_work
 
       kaapi_task_init(ttask, blur_body, NULL);
 
-      success = stack_steal (&mst, (void**) &argb);
+      //success = stack_steal (&mst, (void**) &argb);
+      success = stack_pop (&mst, (void**) &argb);
 
       if (!success) return 0;
 
@@ -242,11 +243,11 @@ static void common_entry (void* arg, kaapi_thread_t* thread)
   nb_block = (block_size + (xsize - (2*NB_NEIGHBOURS) - 1)) / block_size;
   nb_block = nb_block * nb_block;
 
-  if (nb_block > STACK_MAX_ELEMENT) 
-  {
-    printf ("Not enough space in stack : %d < %d\n", STACK_MAX_ELEMENT, nb_block);
-    abort();
-  }
+  /* if (nb_block > STACK_MAX_ELEMENT)  */
+  /* { */
+  /*   printf ("Not enough space in stack : %d < %d\n", STACK_MAX_ELEMENT, nb_block); */
+  /*   abort(); */
+  /* } */
     
 
   if ( result != 0 )

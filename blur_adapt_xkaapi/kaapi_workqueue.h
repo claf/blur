@@ -1,45 +1,67 @@
-#include <pthread.h>
+#include <stdlib.h>
 
-#ifndef _KAAPI_WORKQUEUE_H_
-#define _KAAPI_WORKQUEUE_H_
+typedef struct lfs_element {
+  void* value;
+  struct lfs_element* next;
+} lfs_element_t;
 
-#define STACK_MAX_ELEMENT 2048
+typedef struct lfs {
+  lfs_element_t* tail;
+  lfs_element_t* dummy;
+  int counter;
+} lfs_t;
 
-extern pthread_mutex_t _internal_mutex;
+typedef lfs_t kaapi_stack_t;
 
-typedef struct stack
-{
-  void** _stack;
-  int    _beg;
-  int    _end;
-  int    _lock;
-} kaapi_stack_t;
+void stack_init (lfs_t* mst) {
+  mst->counter = 0;
 
-void stack_init (kaapi_stack_t* my_stack);
+  mst->dummy = malloc (sizeof (lfs_element_t));
+  mst->dummy->value = NULL;
+  mst->dummy->next = NULL;
 
-int stack_size (kaapi_stack_t* my_stack);
+  mst->tail = mst->dummy;
+}
 
-int stack_is_empty (kaapi_stack_t* my_stack);
+int stack_pop (lfs_t* mst, void* element) {
+  lfs_element_t* back_tail;
 
-// return 1 if succeed and 0 if fail.
-int stack_push (kaapi_stack_t* my_stack, void* element);
+  while (1) {
+    if (!mst->counter) return 0;
 
-//void stack_push_back (kaapi_stack_t* my_stack, void* element);
+    back_tail = mst->tail;
+    element = back_tail->value;
 
-// return 1 if succeed and 0 if fail.
-int stack_pop (kaapi_stack_t* my_stack, void** element);
+    if( __sync_bool_compare_and_swap( &mst->tail, back_tail, mst->tail->next ) ) break;
+  }
 
-//void stack_pop_safe (kaapi_stack_t* my_stack, void* element);
+  free (back_tail);
+  __sync_sub_and_fetch(&mst->counter,1);
 
-// return 1 if succeed and 0 if fail.
-int stack_steal (kaapi_stack_t* my_stack, void** element);
+  return (element==NULL)?0:1;
+}
 
-//void stack_steal_unsafe (kaapi_stack_t* my_stack, void* element);
+void stack_destroy (lfs_t* mst) {
+  while (mst->counter)
+    stack_pop (mst, NULL);
+}
 
-//void lock_pop();
+int stack_push (lfs_t* mst, void* element) {
+  lfs_element_t* back_tail;
+  lfs_element_t* new_element = malloc (sizeof (lfs_element_t));
 
-//void lock_steal();
+  new_element->value = element;
+  new_element->next = NULL;
 
-//void unlock();
+  while (1) {
+    back_tail = mst->tail;
+    new_element->next = back_tail;
+    if ( __sync_bool_compare_and_swap( &mst->tail, back_tail, new_element ) ) break;
+  }
 
-#endif //_KAAPI_WORKQUEUE_H_
+  __sync_add_and_fetch(&mst->counter,1);
+  return 1;
+}
+
+int stack_isempty (lfs_t* mst) { return !mst->counter; }
+int stack_size (lfs_t* mst) { return mst->counter; }
