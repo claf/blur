@@ -39,6 +39,7 @@ int stack_push (kaapi_stack_t* my_stack, void* element)
   pthread_mutex_lock (&_internal_mutex);
   if (my_stack->_end >= (my_stack->_beg + STACK_MAX_ELEMENT))
     {
+      abort();
       pthread_mutex_unlock (&_internal_mutex);
       return 0;
     }
