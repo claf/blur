@@ -12,7 +12,7 @@ all: blur
 
 # START SNIPPET: blur-rule
 blur: build/blur
-	$(CECILIAC) -l="-lppm" -src-path=src -o=build/blur -t=unix \
+	$(CECILIAC) -I="../include/" -l="-lppm" -src-path=src -o=build/blur -t=unix \
 	  Blur.Blur:blur
 # END SNIPPET: blur-rule
 

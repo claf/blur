@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <ppm.h>
-#include "../../../include/blur_const.h"
+#include <blur_const.h>
 
 DECLARE_DATA {
   //int xsize, ysize; /* Image dimensions. */  
