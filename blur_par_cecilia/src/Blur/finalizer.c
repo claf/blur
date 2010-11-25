@@ -22,11 +22,12 @@ void METHOD(collect, signal)(void *_this)
 
   static int count = 0;
 
-  count = count + 1;
+  //count = count + 1;
+  __sync_fetch_and_add (&count, 1);
 
   if (count == _nb_block) {
 #ifdef BLUR_DEBUG    
-    printf ("DEBUG : Writing data to file outa.ppm\n");
+    printf ("DEBUG : Writing data to file %s\n", _fileout_name);
 #endif
     ppmb_write (_fileout_name, _xsize, _ysize, _maxrgb, _array);
   }
