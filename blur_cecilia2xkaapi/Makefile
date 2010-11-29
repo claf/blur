@@ -15,8 +15,10 @@ blur: $(OBJ)
 %.o: %.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-
 clean:
+	rm -rf blur *.o *.ppm
+
+veryclean:
 	rm -rf blur *.o *.ppm blur.h dispatcher.c worker.c finalizer.c
 
-.SILENT: clean
+.SILENT: clean veryclean
