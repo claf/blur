@@ -7,9 +7,15 @@ my $header_file = "blur.h";
 
 open(HEADER, ">$header_file") or die $!;
 
-print HEADER "/*\n * Generated header.\n *\n */\n";
-print HEADER "#include <kaapi.h>\n";
-print HEADER "#include <stddef.h>\n\n";
+print HEADER <<EOP;
+/*
+ * Generated header : $header_file.
+ *
+ */
+
+#include <kaapi.h>
+#include <stddef.h>
+EOP
 
 foreach my $file (@ARGV)
 {
