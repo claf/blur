@@ -18,6 +18,7 @@ int main (int argc, char** argv)
 
   int result;
 
+  kaapi_init ();
   thread = kaapi_self_thread ();
   kaapi_thread_save_frame(thread, &frame);
 
