@@ -1,6 +1,9 @@
 #!/usr/bin/perl
 
-$header_file = "blur.h";
+use strict;
+use warnings;
+
+my $header_file = "blur.h";
 
 open(HEADER, ">$header_file") or die $!;
 
@@ -8,15 +11,15 @@ print HEADER "/*\n * Generated header.\n *\n */\n";
 print HEADER "#include <kaapi.h>\n";
 print HEADER "#include <stddef.h>\n\n";
 
-foreach $file (0..$#ARGV)
+foreach my $file (@ARGV)
 {
-  open(FILEHANDLER, $ARGV[$file]) or die $!;
-  while ($line = <FILEHANDLER>)
+  open(FILEHANDLER, $file) or die $!;
+  while (my $line = <FILEHANDLER>)
   {
     if ($line =~ / METHOD\s*\(.*,\s*(.*)\)\s*\(\s*void\s*\*\s*_this\s*,*(.*)\)/)
     {
-      $function = $1;
-      @args = split (/,/, $2);
+      my $function = $1;
+      my @args = split (/,/, $2);
 
       &WriteHeader ($function, @args);
     }
@@ -25,28 +28,28 @@ foreach $file (0..$#ARGV)
 
 open(HEADER, $header_file) or die $!;
 
-foreach $file (0..$#ARGV)
+foreach my $file (@ARGV)
 {
-  @splitted_path = split (/\//, $ARGV[$file]);
-  $file_out = $splitted_path[$#splitted_path];
-  open(FILEHANDLER, $ARGV[$file]) or die $!;
+  my @splitted_path = split (/\//, $file);
+  my $file_out = $splitted_path[$#splitted_path];
+  open(FILEHANDLER, $file) or die $!;
   open(FILEOUT, ">$file_out") or die $!;
 
-  while ($line = <FILEHANDLER>)
+  while (my $line = <FILEHANDLER>)
   {
     # Suppress DECLARE_DATA :
-    $nb_cb = 0;
+    my $nb_cb = 0;
     if($line =~ /DECLARE_DATA\s*{/)
     {
       $nb_cb++;
-      while(($line = <FILEHANDLER>) && $nb_cb != 0)
+      while(defined($line = <FILEHANDLER>) && $nb_cb != 0)
       {
-        if(@arr = $line =~ /{/g)
+        if(my @arr = $line =~ /{/g)
         {
           $nb_cb += @arr;
         }
 
-        if(@arr = $line =~ /}/g)
+        if(my @arr = $line =~ /}/g)
         {
           $nb_cb -= @arr;
         }
@@ -62,8 +65,8 @@ foreach $file (0..$#ARGV)
     # Method re-definition and header update :
     elsif ($line =~ / METHOD\s*\(.*,\s*(.*)\)\s*\(\s*void\s*\*\s*_this\s*,*(.*)\)/)
     {
-      $function = $1;
-      @args = split (/,/, $2);
+      my $function = $1;
+      my @args = split (/,/, $2);
 
 
       $line = <FILEHANDLER>;
@@ -79,7 +82,7 @@ foreach $file (0..$#ARGV)
 
       if ($#args != -1)
       {
-        foreach $arg (@args)
+        foreach my $arg (@args)
         {
           $arg =~ /.*\s\**([A-Za-z_][A-Za-z0-9_]*)/ or die "No match found";
           print FILEOUT " $arg = arg0->$1;\n";
@@ -92,8 +95,8 @@ foreach $file (0..$#ARGV)
 #    elsif ($line =~ /^\s*CALL\s*\([^,]*,\s*([^,]*),(.*)\)\s*;/)
     elsif ($line =~ /^\s*CALL\s*\([^,]*,\s*(.*)\)\s*;/)
     {
-      @args = split (/,/, $1);
-      $function = $args[0];
+      my @args = split (/,/, $1);
+      my $function = $args[0];
 
       print FILEOUT "  kaapi_task_t* task;\n";
       print FILEOUT "  ".$function."_arg_t* ".$function."_args;\n";
@@ -101,10 +104,10 @@ foreach $file (0..$#ARGV)
       print FILEOUT "  kaapi_task_initdfg( task, ".$function."_body, kaapi_thread_pushdata(thread, sizeof(".$function."_arg_t)) );\n";
       print FILEOUT "  ".$function."_args = kaapi_task_getargst( task, ".$function."_arg_t );\n";
 
-      for ($i = 1; $i <= $#args; $i++)
+      for (my $i = 1; $i <= $#args; $i++)
       {
         #$args[$i] =~ /.*\s\**([A-Za-z_][A-Za-z0-9_]*)/ or die "No match found";
-        $var_name = &Var_Name_Func ($function, $i);
+        my $var_name = &Var_Name_Func ($function, $i);
         print FILEOUT "  ".$function."_args->".$var_name." = $args[$i];\n";
       }
 
@@ -121,14 +124,14 @@ foreach $file (0..$#ARGV)
 }
 
 sub Var_Name_Func {
-  ($function, $index) = @_;
+  (my $function, my $index) = @_;
   open (HEADER, $header_file);
 
-  while ($line = <HEADER>)
+  while (my $line = <HEADER>)
   {
     if ($line =~ /typedef struct ($function)_arg_t/)
     {
-      for ($j = 0; $j < $index; $j++)
+      for (my $j = 0; $j < $index; $j++)
       {
         $line = <HEADER>;
       }
@@ -139,7 +142,7 @@ sub Var_Name_Func {
 }
 
 sub WriteHeader {
-  ($function, @args) = @_;
+  (my $function, my @args) = @_;
   #@args = split (/,/, $arguments);
 
   print HEADER "\n/**********************************************************************/\n\n";
@@ -150,7 +153,7 @@ sub WriteHeader {
   print HEADER "/* $function argument structure : */\n\n";
 
   print HEADER "typedef struct ".$function."_arg_t {\n";
-  foreach $my_arg (@args)
+  foreach my $my_arg (@args)
   {
     print HEADER "\t$my_arg;\n";
   }
@@ -171,7 +174,7 @@ sub WriteHeader {
   }
   else
   {
-    for ($i = 0; $i < $#args; $i++)
+    for (my $i = 0; $i < $#args; $i++)
     {
       print HEADER "KAAPI_ACCESS_MODE_V, ";
     }
@@ -187,11 +190,11 @@ sub WriteHeader {
   }
   else
   {
-    $argc = $#args;
-    foreach $arg (@args)
+    my $argc = $#args;
+    foreach my $arg (@args)
     {
       $arg =~ /.*\s\**([A-Za-z_][A-Za-z0-9_]*)/ or die "No match found";
-      $var_name = $1;
+      my $var_name = $1;
       print HEADER "offsetof (".$function."_arg_t, $var_name)";
       if ($argc != 0)
       {
@@ -211,8 +214,8 @@ sub WriteHeader {
   }
   else
   {
-    $argc = $#args;
-    foreach $arg (@args)
+    my $argc = $#args;
+    foreach my $arg (@args)
     {
       if ($arg =~ /int [A-Za-z_][A-Za-z0-9_]*/)
       {
