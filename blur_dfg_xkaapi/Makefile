@@ -1,7 +1,7 @@
 CC=gcc
-#CFLAGS=-std=c99 -Wall -g $(shell pkg-config --cflags xkaapi)
-CFLAGS=-std=c99 -Wall -O3 $(shell pkg-config --cflags xkaapi)
-LDFLAGS=$(shell pkg-config --libs xkaapi) -lpthread -lppm
+CFLAGS=-std=c99 -Wall -g $(shell pkg-config --cflags kaapi)
+#CFLAGS=-std=c99 -Wall -O3 $(shell pkg-config --cflags kaapi)
+LDFLAGS=$(shell pkg-config --libs kaapi) -lpthread -lppm
 
 SRC=$(wildcard *.c)
 OBJ=$(SRC:.c=.o)
