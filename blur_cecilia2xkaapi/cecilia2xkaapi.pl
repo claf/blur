@@ -207,7 +207,7 @@ sub WriteHeader {
 
   if ($#args == -1)
   {
-    print HEADER "})\n\n";
+    print HEADER "}, 0)\n\n";
   }
   else
   {
@@ -230,6 +230,6 @@ sub WriteHeader {
       }
     }
 
-    print HEADER "})\n\n";
+    print HEADER "}, 0)\n\n";
   }
 }

@@ -80,7 +80,8 @@ KAAPI_REGISTER_TASKFORMAT ( app_main_format,
 			    2,
 			    (kaapi_access_mode_t[]) {KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V},
 			    (kaapi_offset_t[]) {offsetof(app_main_arg_t, argc), offsetof(app_main_arg_t, argv)},
-			    (const struct kaapi_format_t*[]) {kaapi_int_format, kaapi_ulong_format})
+			    (const struct kaapi_format_t*[]) {kaapi_int_format, kaapi_ulong_format},
+          0)
 
 /* blur task decl. : */
 
@@ -91,7 +92,8 @@ KAAPI_REGISTER_TASKFORMAT ( blur_format,
 			    7,
 			    (kaapi_access_mode_t[]) {KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V},
 			    (kaapi_offset_t[]) {offsetof(blur_arg_t, array), offsetof(blur_arg_t, out), offsetof(blur_arg_t, ysize), offsetof(blur_arg_t, xstart), offsetof(blur_arg_t, ystart), offsetof(blur_arg_t, xblock_size), offsetof(blur_arg_t,yblock_size)},
-			    (const struct kaapi_format_t*[]) {kaapi_ulong_format, kaapi_ulong_format, kaapi_int_format, kaapi_int_format, kaapi_int_format, kaapi_int_format, kaapi_int_format})
+			    (const struct kaapi_format_t*[]) {kaapi_ulong_format, kaapi_ulong_format, kaapi_int_format, kaapi_int_format, kaapi_int_format, kaapi_int_format, kaapi_int_format},
+          0)
 
 /* signal task decl. : */
 
@@ -102,7 +104,8 @@ KAAPI_REGISTER_TASKFORMAT ( signal_format,
 			    0,
 			    (kaapi_access_mode_t[]) {},
 			    (kaapi_offset_t[]) {},
-			    (const struct kaapi_format_t*[]) {})
+			    (const struct kaapi_format_t*[]) {},
+          0)
 
 /* set_info task decl. : */
 
@@ -113,4 +116,5 @@ KAAPI_REGISTER_TASKFORMAT ( set_info_format,
 			    6,
 			    (kaapi_access_mode_t[]) {KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V},
 			    (kaapi_offset_t[]) {offsetof(set_info_arg_t, fileout_name), offsetof(set_info_arg_t, xsize), offsetof(set_info_arg_t, ysize), offsetof(set_info_arg_t, maxrgb), offsetof(set_info_arg_t, array), offsetof(set_info_arg_t, nb_block)},
-			    (const struct kaapi_format_t*[]) {kaapi_ulong_format, kaapi_int_format, kaapi_int_format, kaapi_int_format, kaapi_ulong_format, kaapi_int_format})
+			    (const struct kaapi_format_t*[]) {kaapi_ulong_format, kaapi_int_format, kaapi_int_format, kaapi_int_format, kaapi_ulong_format, kaapi_int_format},
+          0)
