@@ -15,6 +15,9 @@ blur: $(OBJ)
 %.o: %.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
+perl:
+	./cecilia2xkaapi.pl ../blur_par_cecilia/src/Blur/*.c
+
 clean:
 	rm -rf blur *.o *.ppm
 
