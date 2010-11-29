@@ -142,7 +142,7 @@ sub WriteHeader {
   ($function, @args) = @_;
   #@args = split (/,/, $arguments);
 
-
+  print HEADER "\n/**********************************************************************/\n\n";
   print HEADER "/* $function function prototype : */\n\n";
 
   print HEADER "void ".$function."_body (void* taskarg, kaapi_thread_t* thread);\n\n";  
