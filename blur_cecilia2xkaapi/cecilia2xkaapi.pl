@@ -178,7 +178,8 @@ sub WriteHeader {
 
     print HEADER "KAAPI_ACCESS_MODE_V},\n";
   }
-
+  
+  # data field :
   print HEADER "\t(kaapi_offset_t[]) {";
 
   if ($#args == -1)
@@ -193,6 +194,29 @@ sub WriteHeader {
       $arg =~ /.*\s\**([A-Za-z_][A-Za-z0-9_]*)/ or die "No match found";
       $var_name = $1;
       print HEADER "offsetof (".$function."_arg_t, $var_name)";
+      if ($argc != 0)
+      {
+        $argc--;
+        print HEADER ", ";
+      }
+    }
+
+    print HEADER "},\n";
+  }
+
+  # version field :
+  print HEADER "\t(kaapi_offset_t[]) {";
+
+  if ($#args == -1)
+  {
+    print HEADER "},\n";
+  }
+  else
+  {
+    $argc = $#args;
+    foreach $arg (@args)
+    {
+      print HEADER "0";
       if ($argc != 0)
       {
         $argc--;
