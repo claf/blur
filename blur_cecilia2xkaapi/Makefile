@@ -18,6 +18,9 @@ blur: $(OBJ)
 perl:
 	./cecilia2xkaapi.pl ../blur_par_cecilia/src/Blur/*.c
 
+install_script:
+	cp cecilia2xkaapi.pl $(HOME)/bin/
+
 clean:
 	rm -rf blur *.o *.ppm
 
