@@ -97,9 +97,31 @@ foreach my $file (@ARGV)
       }
     }
 
-    # Call becomes task :
+    # CALL becomes task :
 #    elsif ($line =~ /^\s*CALL\s*\([^,]*,\s*([^,]*),(.*)\)\s*;/)
     elsif ($line =~ /^\s*CALL\s*\([^,]*,\s*(.*)\)\s*;/)
+    {
+      my @args = split (/,/, $1);
+      my $function = $args[0];
+
+      print FILEOUT "  kaapi_task_t* task;\n";
+      print FILEOUT "  ".$function."_arg_t* ".$function."_args;\n";
+      print FILEOUT "  task = kaapi_thread_toptask(thread);\n";
+      print FILEOUT "  kaapi_task_initdfg( task, ".$function."_body, kaapi_thread_pushdata(thread, sizeof(".$function."_arg_t)) );\n";
+      print FILEOUT "  ".$function."_args = kaapi_task_getargst( task, ".$function."_arg_t );\n";
+
+      for (my $i = 1; $i <= $#args; $i++)
+      {
+        #$args[$i] =~ /.*\s\**([A-Za-z_][A-Za-z0-9_]*)/ or die "No match found";
+        my $var_name = &Var_Name_Func ($function, $i);
+        print FILEOUT "  ".$function."_args->".$var_name." = $args[$i];\n";
+      }
+
+      print FILEOUT "  kaapi_thread_pushtask(thread);\n\n";
+    }
+
+    # CALLMINE becomes task :
+    elsif ($line =~ /^\s*CALLMINE\s*\([^,]*,\s*(.*)\)\s*;/)
     {
       my @args = split (/,/, $1);
       my $function = $args[0];
