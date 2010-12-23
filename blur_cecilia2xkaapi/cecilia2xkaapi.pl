@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-my $header_file = "blur.h";
+my $header_file = "main.h";
 
 open(HEADER, ">$header_file") or die $!;
 
