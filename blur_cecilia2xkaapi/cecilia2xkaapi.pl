@@ -222,8 +222,8 @@ sub WriteHeader {
   }
   else
   {
-    $argc = $#args;
-    foreach $arg (@args)
+    my $argc = $#args;
+    foreach my $arg (@args)
     {
       print HEADER "0";
       if ($argc != 0)
