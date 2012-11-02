@@ -16,15 +16,12 @@ blur: $(OBJ)
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 perl:
-	./cecilia2xkaapi.pl ../blur_par_cecilia/src/Blur/*.c
-
-install_script:
-	cp cecilia2xkaapi.pl $(HOME)/bin/
+	c2x ./ ../blur_par_cecilia/src/Blur/
 
 clean:
 	rm -rf blur *.o *.ppm
 
 veryclean:
-	rm -rf blur *.o *.ppm blur.h dispatcher.c worker.c finalizer.c
+	rm -rf blur *.o *.ppm *.h *.c
 
 .SILENT: clean veryclean
