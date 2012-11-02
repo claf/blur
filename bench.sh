@@ -2,12 +2,12 @@
 
 echo "Starting Benchs";
 
-BINARIES='blur_adapt_xkaapi blur_adapt_xkaapi_half'
-#BINARIES='blur_dfg_xkaapi'
+#BINARIES='blur_adapt_xkaapi blur_adapt_xkaapi_half blur_dfg_xkaapi'
+BINARIES='blur_dfg_xkaapi'
 IMG=moon
 ORIGIMG=/home/claferri/dev/blur/moon_blured.ppm
 DIR=/home/claferri/dev/blur/data/
-RUNS=`seq 1 50`
+RUNS=`seq 1 20`
 LD_LIBRARY_PATH=/home/claferri/opt/lib/
 
 ./clean.sh
@@ -16,30 +16,7 @@ LD_LIBRARY_PATH=/home/claferri/opt/lib/
 mkdir -p $DIR
 cd bin
 
-# if [ `hostname` = "idkoiff" ]; then
-#   echo "Numa Machine. Fixing sequential execution"
-#   numa="numactl --physcpubind=0"
-# else
-#   numa=""
-# fi
-
-# # SEQ TIME :
-# prog="blur_seq"
-# echo "blur_seq"
-# beg=$numa
-# for execution in $RUNS
-# do
-#     echo "$execution for various block size :"
-#     for block_size in `seq 20 10 200`
-#     do
-#         echo -n "$block_size "
-#         LD_LIBRARY_PATH=$HOME/opt/lib/ $beg ./$prog ../$IMG.ppm $DIR$IMG"_"$prog"_"$execution"_"$block_size.ppm $block_size > tmp.txt
-#         diff $DIR$IMG"_"$prog"_"$execution"_"$block_size.ppm $ORIGIMG && cat tmp.txt >> $DIR"Time_"$prog"_"$block_size.txt || cat tmp.txt >> error.log
-#     done
-#     echo ""
-# done
-
-for thread in 16 8 4 2 1
+for thread in 16 8 4 2 # 1
 do
     for prog in $BINARIES
     do
@@ -74,12 +51,37 @@ do
 	    for block_size in `seq 20 10 200`
 	    do
 		echo -n "$block_size "
-		LD_LIBRARY_PATH=$HOME/opt/lib/ KAAPI_CPUSET=$KAAPI_CPUSET ./$prog ../$IMG.ppm $DIR$IMG"_"$prog"_"$execution"_"$block_size.ppm $block_size $half_steal > tmp.txt
-		diff $DIR$IMG"_"$prog"_"$execution"_"$block_size.ppm $ORIGIMG && cat tmp.txt >> $DIR"Time_"$prog"_"$block_size"_nbthread_"$thread.txt || cat tmp.txt >> error.log
-	    done
+		LD_LIBRARY_PATH=$HOME/opt/lib/ KAAPI_WSSELECT=workload KAAPI_DISPLAY_PERF=1 KAAPI_CPUSET=$KAAPI_CPUSET ./$prog ../$IMG.ppm $DIR$IMG"_"$prog"_"$execution"_"$block_size.ppm $block_size $half_steal > tmp.txt 2>> error.log 
+		diff $DIR$IMG"_"$prog"_"$execution"_"$block_size.ppm $ORIGIMG > /dev/null 2> /dev/null && cat tmp.txt >> $DIR"Time_"$prog"_"$block_size"_nbthread_"$thread.txt || echo -e "\nDiff error $prog $block_size $thread"
+  rm -fr $DIR$IMG"_"$prog"_"$execution"_"$block_size.ppm
+  done
 	    echo ""
 	done
     done
 done
+
+
+if [ `hostname` = "idkoiff" ]; then
+  echo "Numa Machine. Fixing sequential execution"
+  numa="numactl --physcpubind=0"
+else
+  numa=""
+fi
+
+# # SEQ TIME :
+# prog="blur_seq"
+# echo "blur_seq"
+# beg=$numa
+# for execution in $RUNS
+# do
+#     echo "$execution for various block size :"
+#     for block_size in `seq 20 10 200`
+#     do
+#         echo -n "$block_size "
+#         LD_LIBRARY_PATH=$HOME/opt/lib/ $beg ./$prog ../$IMG.ppm $DIR$IMG"_"$prog"_"$execution"_"$block_size.ppm $block_size > tmp.txt
+#         diff $DIR$IMG"_"$prog"_"$execution"_"$block_size.ppm $ORIGIMG && cat tmp.txt >> $DIR"Time_"$prog"_"$block_size.txt || cat tmp.txt >> error.log
+#     done
+#     echo ""
+# done
 
 cd ../

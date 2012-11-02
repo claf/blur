@@ -3,16 +3,16 @@
 #ifndef _KAAPI_WORKQUEUE_H_
 #define _KAAPI_WORKQUEUE_H_
 
-#define STACK_MAX_ELEMENT 2048
+#define STACK_MAX_ELEMENT 5000
 
 extern pthread_mutex_t _internal_mutex;
 
 typedef struct stack
 {
   void** _stack;
-  int    _beg;
-  int    _end;
-  int    _lock;
+  volatile int    _beg;
+  volatile int    _end;
+  volatile int    _lock;
 } kaapi_stack_t;
 
 void stack_init (kaapi_stack_t* my_stack);

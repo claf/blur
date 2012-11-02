@@ -79,7 +79,8 @@ KAAPI_REGISTER_TASKFORMAT ( app_main_format,
 			    sizeof (app_main_arg_t),
 			    2,
 			    (kaapi_access_mode_t[]) {KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V},
-			    (kaapi_offset_t[]) {offsetof(app_main_arg_t, argc), offsetof(app_main_arg_t, argv)},
+			    (kaapi_offset_t[]) {offsetof(app_main_arg_t, argc.data), offsetof(app_main_arg_t, argv.data)},
+			    (kaapi_offset_t[]) {offsetof(app_main_arg_t, argc.version), offsetof(app_main_arg_t, argv.version)},
 			    (const struct kaapi_format_t*[]) {kaapi_int_format, kaapi_ulong_format},
           0)
 
@@ -91,7 +92,8 @@ KAAPI_REGISTER_TASKFORMAT ( blur_format,
 			    sizeof (blur_arg_t),
 			    7,
 			    (kaapi_access_mode_t[]) {KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V},
-			    (kaapi_offset_t[]) {offsetof(blur_arg_t, array), offsetof(blur_arg_t, out), offsetof(blur_arg_t, ysize), offsetof(blur_arg_t, xstart), offsetof(blur_arg_t, ystart), offsetof(blur_arg_t, xblock_size), offsetof(blur_arg_t,yblock_size)},
+			    (kaapi_offset_t[]) {offsetof(blur_arg_t, array.data), offsetof(blur_arg_t, out.data), offsetof(blur_arg_t, ysize.data), offsetof(blur_arg_t, xstart.data), offsetof(blur_arg_t, ystart.data), offsetof(blur_arg_t, xblock_size.data), offsetof(blur_arg_t,yblock_size.data)},
+			    (kaapi_offset_t[]) {offsetof(blur_arg_t, array.version), offsetof(blur_arg_t, out.version), offsetof(blur_arg_t, ysize.version), offsetof(blur_arg_t, xstart.version), offsetof(blur_arg_t, ystart.version), offsetof(blur_arg_t, xblock_size.version), offsetof(blur_arg_t,yblock_size.version)},
 			    (const struct kaapi_format_t*[]) {kaapi_ulong_format, kaapi_ulong_format, kaapi_int_format, kaapi_int_format, kaapi_int_format, kaapi_int_format, kaapi_int_format},
           0)
 
@@ -115,6 +117,7 @@ KAAPI_REGISTER_TASKFORMAT ( set_info_format,
 			    sizeof (set_info_arg_t),
 			    6,
 			    (kaapi_access_mode_t[]) {KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V, KAAPI_ACCESS_MODE_V},
-			    (kaapi_offset_t[]) {offsetof(set_info_arg_t, fileout_name), offsetof(set_info_arg_t, xsize), offsetof(set_info_arg_t, ysize), offsetof(set_info_arg_t, maxrgb), offsetof(set_info_arg_t, array), offsetof(set_info_arg_t, nb_block)},
+			    (kaapi_offset_t[]) {offsetof(set_info_arg_t, fileout_name.data), offsetof(set_info_arg_t, xsize.data), offsetof(set_info_arg_t, ysize.data), offsetof(set_info_arg_t, maxrgb.data), offsetof(set_info_arg_t, array.data), offsetof(set_info_arg_t, nb_block.data)},
+			    (kaapi_offset_t[]) {offsetof(set_info_arg_t, fileout_name.version), offsetof(set_info_arg_t, xsize.version), offsetof(set_info_arg_t, ysize.version), offsetof(set_info_arg_t, maxrgb.version), offsetof(set_info_arg_t, array.version), offsetof(set_info_arg_t, nb_block.version)},
 			    (const struct kaapi_format_t*[]) {kaapi_ulong_format, kaapi_int_format, kaapi_int_format, kaapi_int_format, kaapi_ulong_format, kaapi_int_format},
           0)

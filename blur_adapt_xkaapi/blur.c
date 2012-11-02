@@ -4,10 +4,12 @@
 #include "blur.h"
 #include "kaapi_workqueue.h"
 
+int total_blocks;
 int  *array;
 int  *out;
 int xsize, ysize;
 int half_steal;
+double tTotal;
 kaapi_stack_t mst;  
 
 typedef struct kaapikaapi_processor_t kaapi_processor_t;
@@ -31,6 +33,7 @@ void do_work (kaapi_stealcontext_t* sc)
   kaapi_thread_t* thread;
   kaapi_taskadaptive_result_t* ktr;
   int success = 0;  
+
 
  compute:
   while (1)
@@ -76,40 +79,61 @@ static int split_work
   int repcount = 0;
   int success = 0;
   int nbtask = 0;
-  int ssize = stack_size(&mst);
-  int nb_push = 0;
+  int nb_push = 1;
   int first = 1;
+  int counttask = 0;
+  double t0, t1;
+
+  t0 = kaapi_get_elapsedtime();
+
+  if (stack_size(&mst) == 0) return 0;
 
   for (; reqcount > 0; ++reqs)
   {
     if (!kaapi_request_ok(reqs))
       continue ;
 
-    nb_push = 0;
+    nb_push = 1;
 
-    if (half_steal == 1 && first == 1)
+    if (half_steal == 1)
     {
-      nb_push = ssize / (reqcount+1);
-      first = 0;
+      nb_push = stack_size(&mst) / (reqcount+1);
+      //printf ("try to answer %d tasks per thief because stack size is %d and thiefs is %d\n", nb_push, stack_size(&mst), reqcount);
     }
 
-    for (nbtask = 0; nbtask <= nb_push; nbtask++)
+    if (nb_push == 0)
+    {
+      if (stack_size (&mst) == 0)
+	return repcount;
+      else
+	nb_push = 1;
+    }
+
+    for (nbtask = 0; nbtask < nb_push; nbtask++)
     {
       tthread = kaapi_request_getthread(reqs);
       ttask = kaapi_thread_toptask(tthread);
 
-      tproc = kaapi_request_kproc(reqs);
+      //tproc = kaapi_request_kproc(reqs);
 
       kaapi_task_init(ttask, blur_body, NULL);
 
       success = stack_steal (&mst, (void**) &argb);
 
-      if (!success) return 0;
+      if (!success) 
+      {
+	if (nbtask!=0) repcount++;
+	t1 = kaapi_get_elapsedtime();
+	tTotal += t1-t0;
+	//printf ("vol ---- %f for %d on %d total task to %d thiefs\n",t1-t0, counttask, total_blocks, repcount);
+	return repcount;
+      }
 
       kaapi_task_setargs(ttask, argb);
       kaapi_thread_pushtask(tthread);
-
     }
+
+    counttask += nb_push;
 
     kaapi_request_reply_head(sc, reqs, NULL);
 
@@ -117,8 +141,63 @@ static int split_work
     ++repcount;
   }
 
+  t1 = kaapi_get_elapsedtime();
+  tTotal += t1-t0;
+
+  if (half_steal)
+    printf ("vol -- %f for %d on %d total task and stack size : %d to %d thiefs\n",t1-t0, counttask, total_blocks, stack_size(&mst), repcount);
+
   return repcount;
 }
+
+/*************************************/
+/* WORK IN PROGRESS SPLITTER REWRITE */
+/*************************************/
+
+
+/* static int split_work */
+/* (kaapi_stealcontext_t* sc, int reqcount, kaapi_request_t* reqs, void* arg) */
+/* { */
+/*   static int nb_call = 0; */
+/*   int nb_tasks = 1; */
+/*   int repcount = 0; */
+/*   int result; */
+
+/*   printf ("SPLITTER (call %d) - %d requests to treat\n", ++nb_call, reqcount); */
+
+/*   for (; reqcount > 0; reqs++) */
+/*   { */
+/*     if (!kaapi_request_ok(reqs)) */
+/*       continue; */
+
+/*     if (half_steal) */
+/*     { */
+/*       nb_tasks = stack_size(&mst) / (reqcount + 1); */
+/*       printf ("SPLITTER : have to reply %d tasks to the #%d thief\n", nb_tasks, repcount); */
+/*     } */
+
+/*     for (i = 0; i < nb_tasks; i++) */
+/*     { */
+/*       printf ("SPLITTER : try to reply one task\n"); */
+
+/*       tthread = kaapi_request_getthread(reqs); */
+/*       ttask = kaapi_thread_toptask(tthread); */
+/*       tproc = kaapi_request_kproc(reqs); */
+/*       kaapi_task_init(ttask, blur_body, NULL); */
+
+/*       result = stack_steal (&mst, (void**) &argb); */
+/*       if (!result) */
+/*       { */
+/* 	printf ("SPLITTER : !!! UNSUCCESSFULL !!!\n"); */
+/*       } */
+
+/*     } */
+/*   } */
+
+/* } */
+
+
+
 
 int dispatch_blur (int block_size, kaapi_thread_t* thread) 
 {
@@ -241,6 +320,7 @@ static void common_entry (void* arg, kaapi_thread_t* thread)
 
   nb_block = (block_size + (xsize - (2*NB_NEIGHBOURS) - 1)) / block_size;
   nb_block = nb_block * nb_block;
+  total_blocks = nb_block;
 
   if (nb_block > STACK_MAX_ELEMENT) 
   {
@@ -297,6 +377,7 @@ static void common_entry (void* arg, kaapi_thread_t* thread)
   if ( result != 0 )
     printf ("ERROR : dispatch_blur error!\n" );
 
+  kaapi_set_workload(kaapi_get_current_processor(), 1);
 
   kaapi_stealcontext_t* const sc = kaapi_thread_pushstealcontext
     (thread, KAAPI_STEALCONTEXT_DEFAULT, split_work, arg, NULL);
@@ -314,8 +395,8 @@ static void common_entry (void* arg, kaapi_thread_t* thread)
   printf("blur %f\n", t1-t0);
 #endif  
 
-  kaapi_sched_sync();
   kaapi_steal_finalize(sc);
+  kaapi_sched_sync();
 }
 
 int main (int argc, char** argv)
@@ -331,6 +412,7 @@ int main (int argc, char** argv)
   /* Timing : */
   t0 = kaapi_get_elapsedtime();
 #endif
+  tTotal = 0;
 
   thread = kaapi_self_thread ();
   kaapi_thread_save_frame (thread, &frame);
@@ -355,6 +437,8 @@ int main (int argc, char** argv)
   t1 = kaapi_get_elapsedtime();
   printf("total %f\n", t1-t0);
 #endif
+
+  printf("vol %f\n", tTotal);
 
   return 1;
 }

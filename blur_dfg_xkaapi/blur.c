@@ -29,6 +29,7 @@ int main (int argc, char** argv)
   /* Timing : */
   t0 = kaapi_get_elapsedtime();
 #endif
+//  kaapi_set_workload(kaapi_get_current_processor(), 1);
 
   kaapi_init ();
   thread = kaapi_self_thread();
@@ -41,6 +42,7 @@ int main (int argc, char** argv)
   argm = kaapi_task_getargst( task, app_main_arg_t );
   argm->argc = argc;
   argm->argv = argv;
+
 
   kaapi_thread_pushtask(thread);
 
